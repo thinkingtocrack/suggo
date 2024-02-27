@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('./partials/bootstrap.ejs') %>
+    <link rel="stylesheet" href="/stylesheets/view.css">
+</head>
+<body>
+    <%- include('./partials/header.ejs') %>
+    <main style="display: flex;gap: 40px;padding: 0 5% 0 5%;">
+        <div class="productphoto">
+
+            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <% item.img.forEach((element,i)=> { %>
+                        <div class="carousel-item <% if(i==0) {%> active<% } %>">
+                            <img src="data:image/png;base64,<%= element.data %>" class="d-block w-100" alt="...">
+                        </div>
+                    <% }); %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+        </div>
+        <div class="productbuy">
+            <div class="productbuy_1">
+                <h2 style="display: inline;"><%= item.productname %></h2>
+                <button>❤️</button>
+            </div>
+            <p><%= item.price %></p>
+            <p><%= item.description %></p>
+            <h6 style="margin-top: 60px;">by SUGGO</h6>
+            <p>quantity</p>
+            <span class="quantity">
+                <button>-</button>
+                <p style="display: inline;">1</p>
+                <button>+</button>
+            </span>
+        </div>
+    </main>
+    <%- include('./partials/footer.ejs') %>
+</body>
+</html>

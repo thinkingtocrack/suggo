@@ -1,0 +1,50 @@
+main{
+    display: flex;
+    flex-direction:column ;
+    height: 100vh;
+}
+
+.main_top{
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+}
+.main_bottom{
+    display: flex;
+}
+.main_view{
+    flex-grow: 1;
+}
+.main_nav button{
+    width: 150px;
+    background-color:rgb(210, 209, 209) ;
+    border: none;
+}
+.main_nav{
+    width:400px;
+    flex-shrink: 0;
+}
+@media (max-width:850px){
+    .main_nav{
+        width: 250px;
+    }
+}
+.main_nav li{
+    background-color: rgb(210, 209, 209);
+    padding: 20px;
+}
+.main_nav ul{
+    margin: 20px 0 20px 0;
+}
+.dash{
+    padding:30px 50px 0 50px
+}
+.accdetails{
+display: grid;
+grid-template-columns: fr 1fr 1fr;
+grid-gap: 80px;
+grid-template-areas: 'i i a' 'i i a';
+}

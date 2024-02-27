@@ -1,0 +1,29 @@
+main{
+    display: flex;
+    min-height: 100vh;
+}
+.topsubmit{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 60px;
+    gap: 10px;
+}
+.topsubmit button{
+    border: solid 1px rgb(219, 219, 219);
+    border-radius: 6px;
+    background-color: white
+}
+.labelbox{
+    display: flex;
+    flex-direction: column;
+}
+.gridbox{
+    display: grid;
+    column-gap: 20px;
+}
+.inputx input{
+    border-radius: 5px;
+    border: solid 1px rgb(212, 212, 212);
+}

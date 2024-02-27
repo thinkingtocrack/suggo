@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('./partials/bootstrap.ejs') %>
+    <link rel="stylesheet" href="./stylesheets/shop.css">
+</head>
+<body>
+    <%- include('./partials/header.ejs') %>
+    <main>
+        <div class="main1">
+            <h1>Shop</h1>
+            <p>Today, the fashion world has evolved, and there is no just 'for men' or 'for women.' Unisex trends are topping the
+            charts, be it clothing or accessories. Men and women are both breaking the usual fashion norms and experimenting with
+            all kinds of accessories. And watches are no exception. If you too want to step out of your comfort zone, you can now go
+            for stylish branded watches from SUGGO</p>
+        </div>
+        <div class="main2">
+            <div class="main2_1">
+                <h3 style="display: inline;">Filter</h3>
+                <a href="">clear filter</a>
+                <div >
+                    <h5>Categories</h5>
+                    <div>
+                        <input type="checkbox">
+                        <label for="">men</label>
+                    </div>
+                    <div>
+                        <input type="checkbox">
+                        <label for="">women</label>
+                    </div>
+                    <div>
+                        <input type="checkbox">
+                        <label for="">kids</label>
+                    </div>
+                    <div>
+                        <input type="checkbox">
+                        <label for="">couples</label>
+                    </div>
+                </div>
+            </div>
+            <div class="products">
+                <div class="sortby">
+                    <select name="" id="">
+                        <option value="">Popular</option>
+                        <option value="">Most selled</option>
+                    </select>
+                    <p>Showing <% if (locals.products) { %>
+                        <%= products.length  %>
+                    <% } else { %>
+                        0
+                    <% } %> Products</p>
+                </div>
+                <div class="productsdisplay">
+                    <% locals.products.forEach(element => { %>
+                        <div class="gridborder">
+                            <div >
+                                <img class="shopimage" src="data:image/png;base64,<%= element.img[0].data %>" alt="<%= element.productname %>">
+                            </div>
+                            <a  style="text-decoration: none;color: black;display: block;font-weight: bold;" href="/shop/view/<%= element._id %>"><p class="textoverflow"><%= element.productname %></p></a>
+                            <p style="color: gray;"><%= element.category %></p>
+                            <p>₹<%= element.price %></p>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </main>
+    <%- include('./partials/footer.ejs') %>
+</body>
+</html>

@@ -1,0 +1,26 @@
+.productphoto{
+    width: 40%;
+    height: 500px;
+    box-shadow: -1px -1px 10px 1px #888888, 1px 1px 10px 1px #888888;
+}
+.productphoto img{
+    width: 450px;
+    height: 500px;
+}
+.productbuy{
+    flex:1
+}
+.productbuy_1 h2{
+    margin-right: 10%;
+}
+.quantity{
+    border: solid 1px;
+    padding: 5px;
+}
+.quantity button{
+    border: none;
+    background-color:white;
+}
+main{
+    height: 100vh;
+}

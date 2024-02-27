@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/admin/admin.css">
+    <%- include('../partials/bootstrap.ejs') %>
+</head>
+<body>
+    
+    <head>
+        <style>
+            header h2{
+                margin-left: 48%;
+                display: inline;
+            }
+            header{
+                background-color: rgb(223, 223, 223);
+                height: 50px;
+            }
+        </style>
+    </head>
+    <header>
+        <h2>Suggo</h2>
+    </header>
+    <hr style="margin: 0;">
+    
+
+
+
+    <main>
+        <form action="/auth/admin_login" method="POST" onsubmit="return validation()">
+            <div class="login_box">
+                <div style="display: flex;justify-content: center;">
+                    <h2>Admin Login</h2>
+                </div>
+                <div id="err" class="alert alert-danger" role="alert" style="display: 
+                <% if(locals.error){ %>
+                block
+                <% }else{%>
+                none
+                <% } %>
+                ;position: absolute;top:100px;left:23%;scale: .7;">
+                    Incorrect Username or Password
+                </div>
+                <div style="display: flex;flex-direction: column;gap:20px">
+                    <input type="email" name="email" id="email" placeholder="Email">
+                    <div>
+                        <div class="password-container">
+                            <button type="button" id="password-eye" onclick="toggleEye()">👁️</button>
+                            <input type="password" name="password" id="password" placeholder="password">
+                        </div>
+                        <p id="passhint">Your password must be 8-20 characters long, contain letters and numbers</p>
+                    </div>
+                </div>
+                <div style="display: flex;flex-direction: column;align-items: center;margin-top: 10px;">
+                    <button type="submit">Login</button>
+                </div>
+
+            </div>
+        </form>
+    </main>
+    <%- include('../partials/footer.ejs') %>
+    <script>
+        function toggleEye(){   
+            const p=document.getElementById('password')
+            p.type= (p.type==='password')?'text':'password'
+        }
+
+        let passhint
+        
+        function validation(){
+            clearTimeout(passhint)
+            const a=document.querySelector('#email').value
+            const b=document.querySelector('#password').value
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+            let err=0
+            if(!passwordRegex.test(b)){
+                document.querySelector('#passhint').style.color='red'
+                document.querySelector('#passhint').style.fontSize='large'
+                passhint=setTimeout(() => {
+                    document.querySelector('#passhint').style.color='gray'
+                    document.querySelector('#passhint').style.fontSize='medium'
+                }, 1000);
+                return false
+            }
+            return true
+        }
+        let input=document.querySelectorAll('input')
+        let login_err=document.querySelector('#err')
+        function hide(a){
+            a.style.opacity=0
+            setTimeout(() => {
+                a.style.display='none'
+            }, 1000);
+        }
+        input[0].addEventListener('click',(e)=>{
+            e.stopPropagation()
+            hide(login_err)
+        })
+        input[1].addEventListener('click',(e)=>{
+            e.stopPropagation()
+            hide(login_err)
+        })
+    </script>
+</body>
+</html>
