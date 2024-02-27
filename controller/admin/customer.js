@@ -7,19 +7,31 @@ const customer_home = async (req, res) => {
 }
 const customer_status=async(req,res)=>{
     try {
-        const { statusid, status } = req.query
-        const user = await users.findById(statusid).select('_id status')
-        if (status == 'unblock') {
-            user.status = true
-            user.save()
-        } else if (status == 'block') {
-            user.status = false
-            user.save()
-        }
-        res.redirect('/admin/customer')
+        const { customerid, status } = req.body
+        const user = await users.findById(customerid).select('_id status')
+        user.status = status
+        user.save()
+        res.json({
+            cusid:customerid,
+            done:true,
+        })
     } catch (error) {
         console.log(error)
     }  
 }
 
-module.exports={customer_home,customer_status}
+const customer_delete=async(req,res)=>{
+    try {
+        await users.findByIdAndDelete(req.params.id)
+        res.json({
+            deleteduser:true
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            deleteuser:false
+        })
+    }
+}
+
+module.exports={customer_home,customer_status,customer_delete}

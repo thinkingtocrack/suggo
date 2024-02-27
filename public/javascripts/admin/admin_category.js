@@ -1,9 +1,9 @@
-function deleteProduct(a){
+function deleteCategory(a){
     const myModal = new bootstrap.Modal(document.getElementById('deleteModal'),{backdrop:'static'})
     myModal.show()
-    document.getElementById('deleteProductBtn').addEventListener('click',(e)=>{
+    document.getElementById('deleteCategoryBtn').addEventListener('click',(e)=>{
         e.stopPropagation();
-        fetch(`http://localhost:4000/admin/product/deleteproduct/${a}`)
+        fetch(`http://localhost:4000/admin/category/deletecategory/${a}`)
         .then((a)=>{
             return a.json()
         })
@@ -18,7 +18,7 @@ function deleteProduct(a){
 }
 
 
-function productStatus(a,b){
+function categoryStatus(a,b){
     const statusModal=document.getElementById('statusModal')
     c=statusModal.getElementsByClassName('form-check-input')
     if(b){
@@ -35,7 +35,7 @@ function productStatus(a,b){
         }else{
             b=false
         }
-        fetch('http://localhost:4000/admin/product/status',{
+        fetch('http://localhost:4000/admin/category/status',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -50,59 +50,35 @@ function productStatus(a,b){
             if(a.done){
                 location.reload()
             }else{
-                alert('product status not updated')
+                alert('category status not updated')
             }
         })
     })
 }
 
 
-function previewFiles() {
-    const preview = document.querySelector("#selectedImage");
-    const files = document.querySelector("#formFileMultiple").files;
-    preview.innerHTML=''
-    function readAndPreview(file) {
-    const reader = new FileReader();
-    reader.addEventListener(
-        "load",
-        () => {
-        const image = new Image()
-        image.height = 150;
-        image.title = file.name;
-        image.src = reader.result;
-        preview.appendChild(image);
-        },
-        false,
-    );
-
-    reader.readAsDataURL(file);
+function categorytouppercase(){
+    let a=document.querySelector('#formcategoryinput')
+    a.value=a.value.toUpperCase()
 }
-
-if (files) {
-Array.prototype.forEach.call(files, readAndPreview);
-}
-}
-
-const picker = document.querySelector("#formFileMultiple");
-picker.addEventListener("change", previewFiles);
 
 
 async function productEdit(a){
-    let b=await fetch(`http://localhost:4000/admin/product/edit/${a}`)
+    let b=await fetch(`http://localhost:4000/admin/category/edit/${a}`)
     b=await b.json()
+    console.log(b)
     let editModal=document.querySelector('#editProduct')
     const myModal = new bootstrap.Modal(editModal, {backdrop:'static'})
     myModal.show()
-    document.querySelectorAll('.editproductbtnsub').forEach((a,i)=>{
-         a.formAction=`/admin/product/edit/${i}/`+b.data._id
+    document.querySelectorAll('.editcategorybtnsub').forEach((a,i)=>{
+         a.formAction=`/admin/category/edit/`+b.data._id+'/'+i
     })
     document.querySelectorAll('.x1').forEach((a)=>{
         let k=document.getElementById(a.value)
+        console.log(k)
         k.disabled=true
-        if(a.value!='productfile'){
-            let label=document.querySelector(`label[for=${a.value}]`)
-            label.textContent=b.data[k.name]
-        }
+        let label=document.querySelector(`label[for=${a.value}]`)
+        label.textContent=b.data[k.name]
     })
     document.querySelectorAll('.x1').forEach((a)=>{
         a.addEventListener('change',(e)=>{

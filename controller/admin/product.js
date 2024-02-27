@@ -17,11 +17,9 @@ const product_home = async (req, res) => {
 
 const product_edit=async(req,res)=>{
     try {
-        const datax = await categorys.find().select('category')
         const data = await products.findById(req.params.id).select('productname price category stock brand description')
         res.json({
             data:data,
-            category:datax,
         })
     } catch (error) {
         console.log(error)
@@ -29,8 +27,8 @@ const product_edit=async(req,res)=>{
 }
 
 const product_status=async (req, res) => {
+    const { statusid, status } = req.body
     try {
-        const { statusid, status } = req.body
         const product = await products.findById(statusid).select('_id status')
         if (status) {
             product.status = status
@@ -71,7 +69,6 @@ const product_edit_post=async(req,res)=>{
     const product = await products.findById(req.params.id)
     const status=Number(req.params.status)
     const data=req.body
-    console.log(req.files)
     let arrayimage = req.files.length==0 ? undefined: req.files.map((a) => {
         return {
             data: a.buffer.toString('base64'),

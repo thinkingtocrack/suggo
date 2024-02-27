@@ -35,15 +35,8 @@ router.get('/admin_login',(req,res,next)=>{
 router.get('/',seq,dashboard.dashboard_home)
 
 router.get('/customer', seq,customer.customer_home)
-router.get('/customer/status',seq,customer.customer_status)
-router.get('/deleteuser/:id',seq,async(req,res)=>{
-    try {
-        await users.findByIdAndDelete(req.params.id)
-        res.redirect('/admin/customer')
-    } catch (error) {
-        console.log(error)
-    }
-})
+router.post('/customer/status',seq,customer.customer_status)
+router.get('/customer/deleteuser/:id',seq,customer.customer_delete)
 
 
 router.get('/product', seq,product.product_home )
@@ -55,9 +48,8 @@ router.post('/product/edit/:status/:id', seq, upload.array('testImage', 12),prod
 
 
 router.get('/category',seq,category.home)
-router.get('/category/status',seq,category.statusupdate)
+router.post('/category/status',seq,category.statusupdate)
 router.get('/category/deletecategory/:id',seq,category.deletecategory)
-router.get('/category/new',seq,category.newcategory)
 router.post('/category/new/:id',seq,category.newcategorypost)
 router.get('/category/edit/:id',seq,category.editcategory)
 router.post('/category/edit/:id/:status', seq, category.categoryeditpost)

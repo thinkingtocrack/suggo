@@ -7,38 +7,38 @@ const home = async(req, res) => {
 }
 
 const statusupdate=async(req,res)=>{
-    const {statusid,status} = req.query
+    const {statusid,status} = req.body
     try {
         const data = await categorys.findById(statusid)
-        if (status == 'unblock') {
-            data.status = true
-            data.save()
-        } else if (status == 'block') {
-            data.status = false
-            data.save()
-        }
-        res.redirect('/admin/category')
+        data.status = status
+        data.save()
+        res.json({
+            categoryid:statusid,
+            done:true,
+        })
     } catch (error) {
         console.log(error)
+        res.json({
+            categoryid:statusid,
+            done:false,
+        })
     }
 }
 
 const deletecategory=async(req,res)=>{
     try {
         await categorys.findByIdAndDelete(req.params.id)
-        res.redirect('/admin/category')
+        res.json({
+            deleted:true
+        })
     } catch (error) {
         console.log(error)
+        res.json({
+            deleted:false
+        })
     }
 }
 
-const newcategory=(req,res)=>{
-    try {
-        res.render('./admin/admin_newcategory',{dark:3})
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 const newcategorypost=async(req,res)=>{
     try {
@@ -53,8 +53,10 @@ const newcategorypost=async(req,res)=>{
 
 const editcategory=async(req,res)=>{
     try {
-        const {category}=await categorys.findById(req.params.id)
-        res.render('./admin/admin_editcategory',{data:category,id:req.params.id,dark:3})
+        const data=await categorys.findById(req.params.id).select('category')
+        res.json({
+            data:data
+        })
     } catch (error) {
         res.redirect('/admin/category')
     }
@@ -63,16 +65,19 @@ const editcategory=async(req,res)=>{
 const categoryeditpost = async (req, res) => {
     try {
         const {id,status}=req.params
-        const {category}=req.body
-        const data=await categorys.findById(id)
-        data.category=category
-        req.params.status == 1 ? data.status = true : data.status = false
-        data.save()
+        const data=req.body
+        const category = await categorys.findById(id)
+        await categorys.findByIdAndUpdate(id,
+            {
+                category: data?.category == undefined ? category.category : data.category,
+                status: Boolean(Number(status)),
+            }, { new: true, runValidators: true }
+        )
         res.redirect('/admin/category')
     } catch (error) {
         res.redirect('/admin/category')
     }
-}
+}  
 
 
-module.exports = { home, statusupdate, deletecategory, newcategory, newcategorypost, editcategory,categoryeditpost }
+module.exports = { home, statusupdate, deletecategory, newcategorypost, editcategory,categoryeditpost }

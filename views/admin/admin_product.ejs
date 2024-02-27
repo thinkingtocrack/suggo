@@ -34,11 +34,11 @@
                         <td style="text-align: center;"> <%= element.stock %></td>
                         <td>
                             <div class="useredit" style="display: flex;justify-content:space-between;">
-                                <button class="del" onclick=<%= `deleteProduct("${element._id}")`%>><img src="/images/adminicons/trash.png" alt=""></button>
+                                <button class="del" onclick=<%= `deleteProduct("${element._id}")`%>><img src="/images/adminicons/trash.png" alt="deleteicon"></button>
                                 <% if(element.status){ %>
                                     <button style="margin-right: 20px;" onclick=<%= `productStatus("${element._id}",${element.status})`%>>🟢 Published</button>
                                 <% }else{ %>
-                                        <button style="margin-right: 20px;" onclick=<%= `productStatus("${element._id}",${element.status})`%>>🔴 Un Published</button>
+                                    <button style="margin-right: 20px;" onclick=<%= `productStatus("${element._id}",${element.status})`%>>🔴 Un Published</button>
                                     <% } %>
                                 <button type="button" onclick=<%= `productEdit("${element._id}")`%> >Edit</button>
                             </div>
@@ -52,7 +52,7 @@
     </main>
 
   
-  <!-- Modal -->
+  <!-- Modal for delete -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
