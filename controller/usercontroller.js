@@ -2,6 +2,7 @@ const user = require('../model/users')
 const bcrypt = require('bcrypt')
 const otpFunction=require('../controller/auth')
 const {validationResult}=require('../middleware//validation')
+const product = require('../model/product')
 
 
 
@@ -116,6 +117,14 @@ const user_wishlistadd=async(req,res)=>{
     }
 }
 
+
+const user_cart=async(req,res)=>{
+    const cartlist=await user.find({email:req.session.email}).select('cart')
+    const productlist=await product.find({_id:{$in:cartlist[0].cart}}).select('productname img price')
+    res.locals.cartlist=productlist
+    res.render('./user/cart.ejs')
+}
+
 const user_cartadd=async(req,res)=>{
     try {
         let productid=req.params.id
@@ -133,4 +142,4 @@ const user_cartadd=async(req,res)=>{
 
 
 
-module.exports = {user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
+module.exports = {user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }

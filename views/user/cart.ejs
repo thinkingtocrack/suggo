@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/user/cart.css">
+    <%- include('../partials/bootstrap.ejs') %>
+</head>
+<body>
+    <%- include('./partials/header.ejs') %>
+    <main class="container">
+        <div class="top-cart">
+            <h1>Your Cart</h1>
+        </div>
+        <ul class="list-group">
+            <% if(locals.cartlist) {%>
+                <% cartlist.forEach(element => { %>
+                    <li class="list-group-item">
+                        <div class="cartbox">
+                            <img class="cartimage" src="data:image/png;base64,<%= element.img[0].data %>" alt="<%= element.productname %>">
+                            <div>
+                                <h5><%= element.productname %></h5>
+                                <button type="button" class="btn btn-danger">Remove</button>
+                            </div>
+                            <p style="font-size:large;font-weight: bold;"> Rs.<%= element.price %></p>
+                        </div>
+                    </li>
+                <% }); %> 
+            <% } %>
+          </ul>
+    </main>
+    <%- include('./partials/footer.ejs') %>
+</body>
+</html>
