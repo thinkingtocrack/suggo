@@ -43,24 +43,20 @@
                 <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </span>
-            <div style="display: flex;justify-content: center;margin-left: 10px;align-items: center;">
-                <% if(locals.auth){ %>
-                <a style="background-color: white;border: none;margin-right: 10px;">👜<%=cartnum %></a>
-                <div class="dropdown">
-                    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <%= name %>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                      <li><a class="dropdown-item" href="#">Wishlist</a></li>
-                      <li><a class="dropdown-item" href="/user/user_account">My Account</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="/user/user_logout" style="color: red;">SIGN OUT</a></li>
-                    </ul>
+            <div style="display: flex;justify-content: center;margin-left: 10px;">
+                    <% if(locals.cartnum){ %>
+                        <button style="background-color: white;border: none;">👜<%=cartnum %></button>
+                    <% }else{%>
+                         <a href="">👜 0</a>
+                    <% } %>
+                    <span style="margin-left: 10px;">
+                        <% if(locals.auth) {%>
+                            <a href="/user/user_logout" style="text-decoration: none;">Signout</a>
+                        <% }else{ %>
+                            <a href="/user/user_signin" style="text-decoration: none;">login</a>
+                        <% } %>
+                    </span>
                 </div>
-                <% }else{ %>
-                    <a href="/user/user_signin" class="btn btn-primary" role="button">LOGIN</a>
-                <% } %>
-            </div>
         </div>
     </div>
     <hr style="margin: 0;">
