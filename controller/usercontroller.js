@@ -101,5 +101,36 @@ const user_verify=async(req,res)=>{
     }
 }
 
+const user_wishlistadd=async(req,res)=>{
+    try {
+        let productid=req.params.id
+        let b=await user.updateMany({email:req.session.email}, { $addToSet: { wishlist: productid } })
+        res.json({
+            added:true,
+            exists:(b.modifiedCount==0)?true:false,
+        })
+    } catch (error) {
+        res.json({
+            added:false
+        })
+    }
+}
 
-module.exports = { user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
+const user_cartadd=async(req,res)=>{
+    try {
+        let productid=req.params.id
+        let b=await user.updateMany({email:req.session.email}, { $addToSet: { cart: productid } })
+        res.json({
+            added:true,
+            exists:(b.modifiedCount==0)?true:false,
+        })
+    } catch (error) {
+        res.json({
+            added:false
+        })
+    }
+}
+
+
+
+module.exports = {user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }

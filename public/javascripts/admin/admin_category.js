@@ -66,7 +66,6 @@ function categorytouppercase(){
 async function productEdit(a){
     let b=await fetch(`http://localhost:4000/admin/category/edit/${a}`)
     b=await b.json()
-    console.log(b)
     let editModal=document.querySelector('#editProduct')
     const myModal = new bootstrap.Modal(editModal, {backdrop:'static'})
     myModal.show()

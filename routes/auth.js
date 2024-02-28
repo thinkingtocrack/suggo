@@ -57,7 +57,7 @@ router.post('/otpuser',async(req,res)=>{
             delete req.session.otpadmin
             res.redirect('/admin/product')
         } else {
-            res.render('otpverify', { otperr: true })
+            res.render('./common/otpverify', { otperr: true })
         }
     }else{
         res.redirect('/admin/admin_login?error=true')

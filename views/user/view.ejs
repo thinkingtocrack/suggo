@@ -9,46 +9,48 @@
 </head>
 <body>
     <%- include('./partials/header.ejs') %>
-    <main style="display: flex;gap: 40px;padding: 0 5% 0 5%;">
-        <div class="productphoto">
-
-            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <% item.img.forEach((element,i)=> { %>
-                        <div class="carousel-item <% if(i==0) {%> active<% } %>">
-                            <img src="data:image/png;base64,<%= element.data %>" class="d-block w-100" alt="...">
-                        </div>
-                    <% }); %>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+    <main>
+        <div class="productimage">
+            <div class="img-container">
+                <div id="zoom"></div>
+                <% item.img.forEach((element,i)=> { %>
+                    <img class="imgzoomx" src="data:image/png;base64,<%= element.data %>" alt="...">
+                <% }); %>
             </div>
-
         </div>
-        <div class="productbuy">
-            <div class="productbuy_1">
-                <h2 style="display: inline;"><%= item.productname %></h2>
-                <button>❤️</button>
+        <div class="product">
+            <div style="display: flex;width: 100%;justify-content: space-between;">
+                <p style="display: inline;font-size: x-large;font-weight: 400;"><%= item.productname %></p>
+                <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add wishlist"<% } %>>
+                    <button onclick=<%=`addwishlist('${item._id}')` %> style="scale: 1.2;"  type="button" class="btn btn-light btn-lg disbut"<%if(!locals.auth){  %>  disabled<% } %>>❤️</button>
+                </span>
             </div>
-            <p><%= item.price %></p>
-            <p><%= item.description %></p>
-            <h6 style="margin-top: 60px;">by SUGGO</h6>
-            <p>quantity</p>
-            <span class="quantity">
-                <button>-</button>
-                <p style="display: inline;">1</p>
-                <button>+</button>
-            </span>
+            
+
+            <div style="position: absolute;top: 210px;left: 80%;z-index: 1000;" id="liveAlertPlaceholder"></div>
+
+
+            <div>
+                <h6 style="color: gray;">BRAND:<%= item.brand %></h6>
+            </div>
+            <hr style="border-color: rgb(225, 225, 225);">
+            <div style="margin-top: 30px;">
+                <h3 style="display: inline;color: red;">Rs. <%= item.price %></h3>
+                <p style="display: inline;color: gray;">(Inclusive of all taxes)</p>
+            </div>
+            <div style="margin-top: 10px;width: 100%;height:250px;">
+                <p><%= item.description %></p>
+            </div>
+            <div style="margin-top: 10px;">
+                <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add to cart"<% } %>>
+                    <button onclick=<%=`addToCart('${item._id}')` %> type="button" <%if(!locals.auth){  %> disabled<% } %> class="btn btn-dark btn-lg disbut">ADD TO CART</button>
+                </span>
+                <button type="button" class="btn btn-danger btn-lg">BUY NOW</button>
+            </div>
         </div>
     </main>
     <%- include('./partials/footer.ejs') %>
+
+    <script src="/javascripts/user/view.js"></script>
 </body>
 </html>
