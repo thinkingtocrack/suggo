@@ -38,27 +38,6 @@ router.post('/', async (req, res) => {
     }
 })
 
-// router.post('/', async (req, res) => {
-//     const { email, password } = req.body
-//     const user = await users.findOne({ email: email }).select('password status')
-//     if (user) {
-//         const check = await bcrypt.compare(password, user.password)
-//         if (check && user.status) {
-//             const otpx=otp()
-//             await otpsend(email,otpx)
-//             user.otp=otpx
-//             user.save()
-//             req.session.otp=true
-//             req.session.email=email
-//             res.render('otpverify')
-//         } else {
-//             res.redirect('/user/user_signin?error=true')
-//         }
-//     } else {
-//         res.redirect('/user/user_signin?error=true')
-//     }
-// })
-
 router.post('/otpuser',async(req,res)=>{
     if(req.session.otp){
         const {otp}=req.body
@@ -85,37 +64,6 @@ router.post('/otpuser',async(req,res)=>{
     }
 })
 
-// router.post('/otpuser', async (req, res) => {
-//     if (req.session.otp) {
-//         const { otp } = req.body
-//         const data = await users.findOne({ email: req.session.email }).select('otp')
-//         if (data.otp == otp) {
-//             req.session.user = true
-//             delete req.session.otp
-//             res.redirect('/')
-//         } else {
-//             req.session.user = false
-//             delete req.session.email
-//             delete req.session.otp
-//             res.redirect('/user/user_signin?error=true')
-//         }
-//     } else if (req.session.otpadmin) {
-//         const { otp } = req.body
-//         if (otpadmin == otp) {
-//             req.session.admin = true
-//             delete req.session.otpadmin
-//             res.redirect('/admin/product')
-//         } else {
-//             req.session.admin = false
-//             delete req.session.otpadmin
-//             res.redirect('/admin/admin_login?error=true')
-//         }
-//     } else {
-//         res.redirect('/admin/admin_login?error=true')
-//     }
-// })
-
-var otpadmin
 
 router.post('/admin_login',async(req,res)=>{
     const { email, password } = req.body

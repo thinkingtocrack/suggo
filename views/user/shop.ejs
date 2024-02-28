@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <%- include('./partials/bootstrap.ejs') %>
-    <link rel="stylesheet" href="./stylesheets/shop.css">
+    <%- include('../partials/bootstrap.ejs') %>
+    <link rel="stylesheet" href="./stylesheets/user/shop.css">
 </head>
 <body>
     <%- include('./partials/header.ejs') %>
@@ -20,39 +20,21 @@
         <div class="main2">
             <div class="main2_1">
                 <h3 style="display: inline;">Filter</h3>
-                <a href="">clear filter</a>
                 <div >
                     <h5>Categories</h5>
+                    <% locals.category.forEach((element,i)=>{ %>
                     <div>
-                        <input type="checkbox">
-                        <label for="">men</label>
+                        <label>
+                            <input class="filtercat" type="checkbox" <% if(locals.filter.includes(element.category)){ %>checked<% } %> name="<%= element.category %>"> <%= element.category %>
+                        </label>
                     </div>
-                    <div>
-                        <input type="checkbox">
-                        <label for="">women</label>
-                    </div>
-                    <div>
-                        <input type="checkbox">
-                        <label for="">kids</label>
-                    </div>
-                    <div>
-                        <input type="checkbox">
-                        <label for="">couples</label>
-                    </div>
+                    <% }) %>
+                    <input hidden type="text" form="filtersearch" name="category" id="hiddeninputx">
+                    <button type="submit" form="filtersearch"  class="btn btn-dark">Apply filter</button>
+                    <a href="/shop" class="btn btn-danger">Clear Filter</a>
                 </div>
             </div>
             <div class="products">
-                <div class="sortby">
-                    <select name="" id="">
-                        <option value="">Popular</option>
-                        <option value="">Most selled</option>
-                    </select>
-                    <p>Showing <% if (locals.products) { %>
-                        <%= products.length  %>
-                    <% } else { %>
-                        0
-                    <% } %> Products</p>
-                </div>
                 <div class="productsdisplay">
                     <% locals.products.forEach(element => { %>
                         <div class="gridborder">
@@ -65,9 +47,23 @@
                         </div>
                     <% }) %>
                 </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
             </div>
         </div>
     </main>
     <%- include('./partials/footer.ejs') %>
+    <script src="javascripts/user/shop.js"></script>
 </body>
 </html>

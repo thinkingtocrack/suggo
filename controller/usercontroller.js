@@ -11,9 +11,9 @@ const user_signin = (req, res) => {
             res.redirect('/')
         } else {
             if (req.query.error == 'true') {
-                res.render('login', { error: true });
+                res.render('./user/login.ejs', { error: true });
             } else {
-                res.render('login');
+                res.render('./user/login.ejs');
             }
         }
     } catch (error) {
@@ -23,15 +23,15 @@ const user_signin = (req, res) => {
 }
 
 const user_account = (req, res) => {
-    res.render('userhome')
+    res.render('./user/userhome')
 }
 
 const user_registration = (req, res) => {
     try {
         if (req.query.user == 'exist') {
-            res.render('signup', { error: true })
+            res.render('./user/signup.ejs', { error: true })
         } else {
-            res.render('signup')
+            res.render('./user/signup.ejs')
         }
     } catch (error) {
         console.log(error)
@@ -60,7 +60,7 @@ const user_registrationpost = async (req, res) => {
                 } catch (error) {
                     console.error(error)
                 }
-                res.render('otpverify', { otpaddress: '/', id: _id, otpwait: Math.floor(status.wait)})
+                res.render('./common/otpverify', { otpaddress: '/', id: _id, otpwait: Math.floor(status.wait)})
             }
         }
     } catch (error) {
@@ -83,7 +83,7 @@ const user_logout = (req, res) => {
 }
 
 const user_forgotpassword = (req, res) => {
-    res.render('forgotpassword', { error: req.query.error })
+    res.render('./common/forgotpassword', { error: req.query.error })
 }
 
 const user_verify=async(req,res)=>{

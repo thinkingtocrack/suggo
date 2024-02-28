@@ -1,15 +1,31 @@
 const users = require('../model/users')
 const product = require('../model/product')
+const category =require('../model/category')
 
 const homepage = async (req, res) => {
-    res.render('index')
+    res.render('./user/index.ejs')
 }
 
 const shop = async (req, res) => {
     try {
-        const products = await product.find().select('productname price _id img category')
+        const truecategory = await category.find({ status: true }).select('category');
+        let categoryarray = [];
+        if (req.query?.category) {
+            categoryarray = req.query.category.split(',');
+        }
+        let query = {};
+        if (req.query?.search) {
+            query.productname = { $regex: new RegExp(req.query.search, 'i') };
+        }
+        if (categoryarray.length > 0) {
+            query.category = { $in: categoryarray };
+        }
+        console.log(query)
+        const products = await product.find(query).select('productname price _id img category');
+        res.locals.filter=categoryarray
+        res.locals.category=truecategory
         res.locals.products = products
-        res.render('shop')
+        res.render('./user/shop.ejs')
     } catch (error) {
         console.log(error)
     } 
@@ -19,7 +35,7 @@ const productpage = async (req, res) => {
     try {
         const id = req.params.id
         const item = await product.findById(id)
-        res.render('view', { item: item })
+        res.render('./user/view', { item: item })
     } catch (error) {
         console.log(error)
     }
