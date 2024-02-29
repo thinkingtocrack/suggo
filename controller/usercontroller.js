@@ -5,6 +5,14 @@ const {validationResult}=require('../middleware/validation')
 const product = require('../model/product')
 
 
+async function otpsend(a,otpx){
+    const params = {
+        to: a,
+        OTP: otpx
+    }
+    await otpFunction.sendMail(params)
+}
+
 
 const user_signin = (req, res) => {
     try {
@@ -89,16 +97,42 @@ const user_forgotpassword = (req, res) => {
 const user_forgotpasswordPOST=async(req,res)=>{
     try {
         const {email}=req.body
-        const userx= await user.findOne({email:email}).select('email otp status')
+        const userx= await user.findOne({email:email}).select('email status')
         if(userx?.email && userx?.status){
-        otpadmin = otp()
+        otpadmin = otpFunction.otp()
         await otpsend(email, otpadmin)
-        res.render('otpverify')
-    } else {
+        req.session.forgotpassword=otpadmin
+        req.session.email=email
+        res.render('./common/forgotpasswordotp')
+        }else {
         res.redirect('/user/forgot_password?error=true')
-    }
+        }
     } catch (error) {
-        res.send('sory this feature is not implemeted')
+        res.send(error)
+    }
+}
+
+const user_checkforgotpasswordPOST=async(req,res)=>{
+    try {
+        if(req.body.otp==req.session.forgotpassword){
+            let newpassword=await bcrypt.hash(req.body.password, 10)
+            let userx= await user.find({email:req.session.email}).select('password')
+            console.log(userx)
+            userx[0].password=newpassword
+            await userx[0].save()
+            res.json({
+                otp:true
+            })
+        }else{
+            res.json({
+                otp:false
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.json({
+            error:error
+        })
     }
 }
 
@@ -206,4 +240,4 @@ const user_cartremove=async(req,res)=>{
 
 
 
-module.exports = {user_forgotpasswordPOST,user_wishlistremove,user_cartremove,user_wishlist,user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
+module.exports = {user_checkforgotpasswordPOST,user_forgotpasswordPOST,user_wishlistremove,user_cartremove,user_wishlist,user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }

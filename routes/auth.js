@@ -40,35 +40,6 @@ router.post('/user', async (req, res) => {
     }
 })
 
-router.post('/otpuser',async(req,res)=>{
-    try {
-        if(req.session.otp){
-            const {otp}=req.body
-            const data= await users.findOne({email:req.session.email}).select('otp')
-            if(data.otp==otp){
-                req.session.user=true
-                delete req.session.otp
-                res.redirect('/')
-            }else{
-                res.render('otpverify',{otperr:true})
-                delete req.session.email
-            }
-        }else if(req.session.otpadmin){
-            const { otp } = req.body
-            if (otpadmin == otp) {
-                req.session.admin = true
-                delete req.session.otpadmin
-                res.redirect('/admin/product')
-            } else {
-                res.render('./common/otpverify', { otperr: true })
-            }
-        }else{
-            res.redirect('/admin/admin_login?error=true')
-        }        
-    } catch (error) {
-       res.send(error) 
-    }
-})
 
 
 router.post('/admin_login',async(req,res)=>{
