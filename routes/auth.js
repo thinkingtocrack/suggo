@@ -15,7 +15,7 @@ async function otpsend(a,otpx){
 }
 
 
-router.post('/', async (req, res) => {
+router.post('/user', async (req, res) => {
     const { email, password } = req.body
     const user = await users.findOne({ email: email }).select('password status otp')
     if (user) {
