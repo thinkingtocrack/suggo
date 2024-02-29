@@ -37,6 +37,11 @@
             </ul>
         </div>
         <div style="display: flex;align-items: center;">
+            <% if(!locals.otpstatus) {%>
+                <span style="margin-right: 10px;">
+                    <a class="btn btn-danger btn-sm" role="button" >OTP verification not done</a>
+                </span>
+            <% } %>
             <span>
                 <form action="/shop" id="filtersearch" onsubmit="filter()" class="d-flex" role="search">
                 <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">

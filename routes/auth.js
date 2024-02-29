@@ -26,7 +26,7 @@ router.post('/user', async (req, res) => {
             if (!user.otp.status) {
                 const response = await fetch(`http://localhost:4000/otpverification/sendotp/${user._id}`)
                 const otpres = await response.json()
-                res.render('otpverify', { otpaddress: '/', otpwait: Math.floor(otpres.wait), id: user._id })
+                res.render('./common/otpverify', { otpaddress: '/', otpwait: Math.floor(otpres.wait), id: user._id })
             }else{
                 res.redirect('/')
             }
