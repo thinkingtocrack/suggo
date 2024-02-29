@@ -52,16 +52,17 @@ const user_registrationpost = async (req, res) => {
                 res.redirect('/user/user_registration?user=exist')
             } else { 
                 const {_id}=await user.create(data)
-                try {
-                    const response = await fetch(`http://localhost:4000/otpverification/sendotp/${_id}`)
-                    var status=await response.json()
-                    if(status.otpsend!=='ok'){
-                        throw new Error('Otperror')
-                    }
-                } catch (error) {
-                    console.error(error)
-                }
-                res.render('./common/otpverify', { otpaddress: '/', id: _id, otpwait: Math.floor(status.wait)})
+                // try {
+                //     const response = await fetch(`http://localhost:4000/otpverification/sendotp/${_id}`)
+                //     var status=await response.json()
+                //     if(status.otpsend!=='ok'){
+                //         throw new Error('Otperror')
+                //     }
+                // } catch (error) {
+                //     console.error(error)
+                // }
+                // res.render('./common/otpverify', { otpaddress: '/', id: _id, otpwait: Math.floor(status.wait)})
+                res.redirect(`/otpverification/user/${_id}`)
             }
         }
     } catch (error) {

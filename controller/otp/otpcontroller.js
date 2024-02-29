@@ -90,9 +90,10 @@ const send_otp=async(req,res)=>{
 }
 
 renderotp=async(req,res)=>{
-    const response = await fetch(`http://localhost:4000/otpverification/sendotp/${req.params.id}`)
+    const response = await fetch(`http://localhost:4000/otpverification/sendotp/${req.params.id}`,{method: 'GET',credentials: 'include',})
     const otpres = await response.json()
     res.render('./common/otpverify', { otpaddress: '/', otpwait: Math.floor(otpres.wait), id: req.params.id })
 }
 
 module.exports={sendMail,otp,send_otp,renderotp}
+

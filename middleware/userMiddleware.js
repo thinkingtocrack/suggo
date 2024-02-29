@@ -23,4 +23,16 @@ const shopseq=async(req, res, next) => {
     }
 }
 
-module.exports={seq,shopseq}
+const otpseq=async(req,res,next)=>{
+    const status=await users.findOne({email:req.session.email}).select('status')
+    if (req.session.user && status.status) {
+        next()
+    } else {
+        delete req.session.user
+        delete req.session.email
+        res.redirect('/')
+    }
+}
+
+
+module.exports={seq,shopseq,otpseq}

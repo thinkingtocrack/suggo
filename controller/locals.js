@@ -12,6 +12,7 @@ const cart=async(req,res,next)=>{
         res.locals.auth=true
         res.locals.name=data.name
         res.locals.email = req.session.email
+        res.locals.id=data.id
         next()
     }else{
         next()

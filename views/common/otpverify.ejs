@@ -41,6 +41,7 @@
         </form>
     </div>
     <script>
+        handleresend()
         function timer(a,b) {
             let t = Math.floor(a)-1
             const resend = document.querySelector('#resend')
@@ -87,7 +88,7 @@
                 const check = await response.json()
                 console.log(check)
                 if (check.otp) {
-                    window.location.href = '/'
+                    window.location.href = '/user/user_signin'
                 } else {
                     alert('incrroct otp')
                 }
