@@ -24,9 +24,7 @@ router.post('/user', async (req, res) => {
             req.session.user = true
             req.session.email = email
             if (!user.otp.status) {
-                const response = await fetch(`http://localhost:4000/otpverification/sendotp/${user._id}`)
-                const otpres = await response.json()
-                res.render('./common/otpverify', { otpaddress: '/', otpwait: Math.floor(otpres.wait), id: user._id })
+                res.redirect(`/otpverification/user/${user._id}`)
             }else{
                 res.redirect('/')
             }
