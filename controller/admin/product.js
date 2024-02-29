@@ -10,7 +10,7 @@ const product_home = async (req, res) => {
         const items = await products.find()
         res.render('./admin/admin_product', { data: items ,dark:1,category:data})
     } catch (error) {
-        console.log(error)
+        res.send(error)
     }
 }
 
@@ -22,7 +22,7 @@ const product_edit=async(req,res)=>{
             data:data,
         })
     } catch (error) {
-        console.log(error)
+        res.send(error)
     }
 }
 
@@ -61,7 +61,7 @@ const product_new_post=async(req,res)=>{
         await products.create(data)
         res.redirect('/admin/product')
     } catch (error) {
-        console.log(error)
+        res.send(error)
     }
 }
 

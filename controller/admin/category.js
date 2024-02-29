@@ -2,8 +2,12 @@ const categorys=require('../../model/category')
 
 
 const home = async(req, res) => {
-    res.locals.data = await categorys.find()
-    res.render('admin/admin_category',{dark:3})
+    try {
+        res.locals.data = await categorys.find()
+        res.render('admin/admin_category',{dark:3})
+    } catch (error) {
+        res.send(error)
+    }
 }
 
 const statusupdate=async(req,res)=>{

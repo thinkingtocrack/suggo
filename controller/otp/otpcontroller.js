@@ -45,54 +45,61 @@ sendMail = async (params) => {
 
 
 const send_otp=async(req,res)=>{
-    const data=await user.findById(req.params.id).select('email otp')
-    if(data.otp.createdAt==null){
-        const otpData = {
-            to: data.email,
-            OTP: otp()
-        }
-        data.otp.otpcode = otpData.OTP
-        data.otp.createdAt=new Date()
-        try {
-            await sendMail(otpData)
-        } catch (error) {
+    try {
+        const data=await user.findById(req.params.id).select('email otp')
+        if(data.otp.createdAt==null){
+            const otpData = {
+                to: data.email,
+                OTP: otp()
+            }
+            data.otp.otpcode = otpData.OTP
+            data.otp.createdAt=new Date()
+            try {
+                await sendMail(otpData)
+            } catch (error) {
 
-        }
-        await data.save()
-        res.json({
-            otpsend: 'ok',
-            wait:59
-        })
-    }else if((new Date().getTime()-data.otp.createdAt.getTime())/1000>=60){
-        const otpData = {
-            to: data.email,
-            OTP: otp()
-        }
-        data.otp.otpcode = otpData.OTP
-        data.otp.createdAt = new Date()
-        try {
-            await sendMail(otpData)
-        } catch (error) {
+            }
+            await data.save()
+            res.json({
+                otpsend: 'ok',
+                wait:59
+            })
+        }else if((new Date().getTime()-data.otp.createdAt.getTime())/1000>=60){
+            const otpData = {
+                to: data.email,
+                OTP: otp()
+            }
+            data.otp.otpcode = otpData.OTP
+            data.otp.createdAt = new Date()
+            try {
+                await sendMail(otpData)
+            } catch (error) {
 
+            }
+            await data.save()
+            res.json({
+                otpsend: 'ok',
+                wait:60- ((new Date().getTime() - data.otp.createdAt.getTime())/1000)
+            })
+        }else{
+            res.json({
+                otpsend:'ok',
+                wait: 60-(new Date().getTime()-data.otp.createdAt.getTime())/1000
+            })
         }
-        await data.save()
-        res.json({
-            otpsend: 'ok',
-            wait:60- ((new Date().getTime() - data.otp.createdAt.getTime())/1000)
-        })
-    }else{
-        res.json({
-            otpsend:'ok',
-            wait: 60-(new Date().getTime()-data.otp.createdAt.getTime())/1000
-        })
+    } catch (error) {
+        res.send(error)
     }
-    
 }
 
 renderotp=async(req,res)=>{
-    const response = await fetch(`http://localhost:4000/otpverification/sendotp/${req.params.id}`,{method: 'GET',credentials: 'include',})
-    const otpres = await response.json()
-    res.render('./common/otpverify', { otpaddress: '/', otpwait: Math.floor(otpres.wait), id: req.params.id })
+    try {
+        const response = await fetch(`http://localhost:4000/otpverification/sendotp/${req.params.id}`,{method: 'GET',credentials: 'include',})
+        const otpres = await response.json()
+        res.render('./common/otpverify', { otpaddress: '/', otpwait: Math.floor(otpres.wait), id: req.params.id })       
+    } catch (error) {
+        res.send(error)
+    }
 }
 
 module.exports={sendMail,otp,send_otp,renderotp}

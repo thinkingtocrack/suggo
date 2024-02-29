@@ -129,7 +129,7 @@ const user_wishlist=async(req,res)=>{
         res.locals.wishlist=productlist
         res.render('./user/wishlist.ejs')
     } catch (error) {
-        console.log(error)
+        res.send(error)
     }
 }
 const user_wishlistadd=async(req,res)=>{

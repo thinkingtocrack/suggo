@@ -16,54 +16,63 @@ async function otpsend(a,otpx){
 
 
 router.post('/user', async (req, res) => {
-    const { email, password } = req.body
-    const user = await users.findOne({ email: email }).select('password status otp')
-    if (user) {
-        const check = await bcrypt.compare(password, user.password)
-        if (check && user.status) {
-            req.session.user = true
-            req.session.email = email
-            if (!user.otp.status) {
-                res.redirect(`/otpverification/user/${user._id}`)
-            }else{
-                res.redirect('/')
+    try {
+        const { email, password } = req.body
+        const user = await users.findOne({ email: email }).select('password status otp')
+        if (user) {
+            const check = await bcrypt.compare(password, user.password)
+            if (check && user.status) {
+                req.session.user = true
+                req.session.email = email
+                if (!user.otp.status) {
+                    res.redirect(`/otpverification/user/${user._id}`)
+                }else{
+                    res.redirect('/')
+                }
+            } else {
+                res.redirect('/user/user_signin?error=true')
             }
         } else {
             res.redirect('/user/user_signin?error=true')
         }
-    } else {
-        res.redirect('/user/user_signin?error=true')
+    } catch (error) {
+        res.send(error)
     }
 })
 
 router.post('/otpuser',async(req,res)=>{
-    if(req.session.otp){
-        const {otp}=req.body
-        const data= await users.findOne({email:req.session.email}).select('otp')
-        if(data.otp==otp){
-            req.session.user=true
-            delete req.session.otp
-            res.redirect('/')
+    try {
+        if(req.session.otp){
+            const {otp}=req.body
+            const data= await users.findOne({email:req.session.email}).select('otp')
+            if(data.otp==otp){
+                req.session.user=true
+                delete req.session.otp
+                res.redirect('/')
+            }else{
+                res.render('otpverify',{otperr:true})
+                delete req.session.email
+            }
+        }else if(req.session.otpadmin){
+            const { otp } = req.body
+            if (otpadmin == otp) {
+                req.session.admin = true
+                delete req.session.otpadmin
+                res.redirect('/admin/product')
+            } else {
+                res.render('./common/otpverify', { otperr: true })
+            }
         }else{
-            res.render('otpverify',{otperr:true})
-            delete req.session.email
-        }
-    }else if(req.session.otpadmin){
-        const { otp } = req.body
-        if (otpadmin == otp) {
-            req.session.admin = true
-            delete req.session.otpadmin
-            res.redirect('/admin/product')
-        } else {
-            res.render('./common/otpverify', { otperr: true })
-        }
-    }else{
-        res.redirect('/admin/admin_login?error=true')
+            res.redirect('/admin/admin_login?error=true')
+        }        
+    } catch (error) {
+       res.send(error) 
     }
 })
 
 
 router.post('/admin_login',async(req,res)=>{
+try {
     const { email, password } = req.body
     const admin={email:process.env.ADMIN_EMAIL,password:process.env.ADMIN_PASSWORD}
     const adminpass= await bcrypt.hash(admin.password,10)
@@ -80,19 +89,26 @@ router.post('/admin_login',async(req,res)=>{
         req.session.err=true
         res.redirect('/admin/admin_login')
     }
+} catch (error) {
+    
+}
 })
 
 
 router.post('/forgetpassword',async(req,res)=>{
-    const {email}=req.body
-    const user= await users.findOne({email:email}).select('email otp status')
-    if(user.email && user.status){
-        otpadmin = otp()
-        await otpsend(email, otpadmin)
-        req.session.otpadmin = true
-        res.render('otpverify')
-    } else {
-        res.redirect('/user/forgot_password?error=true')
+    try {
+        const {email}=req.body
+        const user= await users.findOne({email:email}).select('email otp status')
+        if(user.email && user.status){
+            otpadmin = otp()
+            await otpsend(email, otpadmin)
+            req.session.otpadmin = true
+            res.render('otpverify')
+        } else {
+            res.redirect('/user/forgot_password?error=true')
+        }
+    } catch (error) {
+        res.send(error)
     }
 })
 

@@ -2,7 +2,12 @@ const product = require('../model/product')
 const category =require('../model/category')
 
 const homepage = async (req, res) => {
-    res.render('./user/index.ejs')
+    try {
+        res.render('./user/index.ejs')    
+    } catch (error) {
+        res.send(error)
+    }
+    
 }
 
 const shop = async (req, res) => {
@@ -26,7 +31,7 @@ const shop = async (req, res) => {
         res.locals.products = products
         res.render('./user/shop.ejs')
     } catch (error) {
-        console.log(error)
+        res.send(error)
     } 
 }
 
@@ -36,7 +41,7 @@ const productpage = async (req, res) => {
         const item = await product.findById(id)
         res.render('./user/view', { item: item })
     } catch (error) {
-        console.log(error)
+        res.send(error)
     }
 }
 

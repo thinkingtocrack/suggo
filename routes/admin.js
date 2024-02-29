@@ -25,10 +25,14 @@ const seq=(req,res,next)=>{
 
 
 router.get('/admin_login',(req,res,next)=>{
-    if(req.session.admin){
-        res.redirect('/admin')
-    }else{
-        next()
+    try {
+        if(req.session.admin){
+            res.redirect('/admin')
+        }else{
+            next()
+        }
+    } catch (error) {
+        res.send(error)
     }
 },login.admin_login)
 
@@ -55,8 +59,12 @@ router.get('/category/edit/:id',seq,category.editcategory)
 router.post('/category/edit/:id/:status', seq, category.categoryeditpost)
 
 router.get('/signout',(req,res)=>{
-    req.session.admin=false
-    res.redirect('/admin/admin_login')
+    try {
+        req.session.admin=false
+        res.redirect('/admin/admin_login')
+    } catch (error) {
+        res.send(error)
+    }
 })
 
 module.exports=router

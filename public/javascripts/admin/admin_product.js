@@ -112,3 +112,40 @@ async function productEdit(a){
         })
     })
 }
+
+
+
+
+
+
+
+
+
+function previewFiles2() {
+    const preview = document.querySelector("#selectedImage2");
+    const files = document.querySelector("#productfile").files;
+    preview.innerHTML=''
+    function readAndPreview(file) {
+    const reader = new FileReader();
+    reader.addEventListener(
+        "load",
+        () => {
+        const image = new Image()
+        image.height = 150;
+        image.title = file.name;
+        image.src = reader.result;
+        preview.appendChild(image);
+        },
+        false,
+    );
+
+    reader.readAsDataURL(file);
+}
+
+if (files) {
+Array.prototype.forEach.call(files, readAndPreview);
+}
+}
+
+const picker2 = document.querySelector("#productfile");
+picker2.addEventListener("change", previewFiles2);
