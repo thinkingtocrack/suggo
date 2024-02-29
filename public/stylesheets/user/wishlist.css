@@ -12,3 +12,7 @@ main{
     display: grid;
     grid-template-columns: .5fr 2fr .2fr;
 }
+.removedcart {
+    opacity: 1;
+    transition: opacity 1s ease-out;
+}

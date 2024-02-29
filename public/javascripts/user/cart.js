@@ -6,7 +6,11 @@ async function removecart(a,d){
         if(b?.exists){
             appendAlert('Product is not in your Cart','warning')
         }else{
-            removedcart[d].remove()
+            removedcart[d].style.transition='opacity 1s ease-out'
+            removedcart[d].style.opacity='0'
+            setTimeout(() => {
+                removedcart[d].remove()
+            }, 1000);
             appendAlert('Product removed from Cart','success')
         }
     }else{

@@ -17,7 +17,7 @@
         <ul class="list-group">
             <% if(locals.cartlist) {%>
                 <% cartlist.forEach((element,i) => { %>
-                    <li class="list-group-item list-group-item-light removedcart">
+                    <li class="list-group-item list-group-item-dark removedcart">
                         <div class="cartbox">
                             <img class="cartimage" src="data:image/png;base64,<%= element.img[0].data %>" alt="<%= element.productname %>">
                             <div>
@@ -31,7 +31,7 @@
             <% } %>
           </ul>
     </main>
-    <div style="position: fixed;top: 210px;left: 80%;z-index: 1000;" id="liveAlertPlaceholder"></div>
+    <div style="position: fixed;bottom: 0px;right:50px;z-index: 1000;" id="liveAlertPlaceholder"></div>
     <%- include('./partials/footer.ejs') %>
 
     <script src="/javascripts/user/cart.js"></script>
