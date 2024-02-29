@@ -34,5 +34,12 @@ const otpseq=async(req,res,next)=>{
     }
 }
 
+const forgetpasswordseq=(req,res,next)=>{
+    if(req.session.user){
+        res.redirect('/')
+    }else{
+        next()
+    }
+}
 
-module.exports={seq,shopseq,otpseq}
+module.exports={seq,shopseq,otpseq,forgetpasswordseq}

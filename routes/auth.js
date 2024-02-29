@@ -85,8 +85,8 @@ router.post('/admin_login',async(req,res)=>{
 
 router.post('/forgetpassword',async(req,res)=>{
     const {email}=req.body
-    const user= await users.findOne({email:email}).select('email otp')
-    if(user.email){
+    const user= await users.findOne({email:email}).select('email otp status')
+    if(user.email && user.status){
         otpadmin = otp()
         await otpsend(email, otpadmin)
         req.session.otpadmin = true

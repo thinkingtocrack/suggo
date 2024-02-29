@@ -24,7 +24,11 @@ const user_signin = (req, res) => {
 }
 
 const user_account = (req, res) => {
-    res.render('./user/userhome')
+    try {
+        res.render('./user/userhome')
+    } catch (error) {
+        res.send(error)
+    }
 }
 
 const user_registration = (req, res) => {
@@ -75,21 +79,45 @@ const user_logout = (req, res) => {
 }
 
 const user_forgotpassword = (req, res) => {
-    res.render('./common/forgotpassword', { error: req.query.error })
+    try {
+        res.render('./common/forgotpassword', { error: req.query.error })
+    } catch (error) {
+        res.send('error')
+    }
+}
+
+const user_forgotpasswordPOST=async(req,res)=>{
+    try {
+        const {email}=req.body
+        const userx= await user.findOne({email:email}).select('email otp status')
+        if(userx?.email && userx?.status){
+        otpadmin = otp()
+        await otpsend(email, otpadmin)
+        res.render('otpverify')
+    } else {
+        res.redirect('/user/forgot_password?error=true')
+    }
+    } catch (error) {
+        res.send('sory this feature is not implemeted')
+    }
 }
 
 const user_verify=async(req,res)=>{
-    const data=await user.findById(req.params.id).select('otp status')
-    if(req.body.otp==data.otp.otpcode){
+    try {
+        const data=await user.findById(req.params.id).select('otp status')
+        if(req.body.otp==data.otp.otpcode){
         data.otp.status=true
         await data.save()
         res.json({
             otp:true
         })
-    }else{
+        }else{
         res.json({
             otp:false
         })
+        }
+    } catch (error) {
+        res.send(error)
     }
 }
 
@@ -178,4 +206,4 @@ const user_cartremove=async(req,res)=>{
 
 
 
-module.exports = {user_wishlistremove,user_cartremove,user_wishlist,user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
+module.exports = {user_forgotpasswordPOST,user_wishlistremove,user_cartremove,user_wishlist,user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
