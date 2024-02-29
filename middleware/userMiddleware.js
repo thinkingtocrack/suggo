@@ -14,7 +14,6 @@ const seq = async(req, res, next) => {
 const shopseq=async(req, res, next) => {
     const status=await users.findOne({email:req.session.email}).select('status')
     if (req.session.user && status.status) {
-    // if (true) {
         next()
     } else {
         delete req.session.user

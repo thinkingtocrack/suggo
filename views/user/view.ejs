@@ -14,10 +14,17 @@
         <div class="productimage">
             <div class="img-container">
                 <div id="zoom"></div>
-                <% item.img.forEach((element,i)=> { %>
-                    <img class="imgzoomx" src="data:image/png;base64,<%= element.data %>" alt="...">
-                <% }); %>
+                <% if(locals.item.img){ %>
+                    <img class="imgzoomx" src="data:image/png;base64,<%= item.img[0].data %>" alt="...">
+                <% }; %>
             </div>
+            <% if(item.img.length>1) {%>
+                <div class="productsubimage">
+                    <% for(i=1;i<4;i++){ %>
+                        <img class="imgsmall" src="data:image/png;base64,<%= item.img[i].data %>" alt="...">
+                    <% } %>
+                </div>
+            <% } %>
         </div>
         <div class="product">
             <div style="display: flex;width: 100%;justify-content: space-between;">

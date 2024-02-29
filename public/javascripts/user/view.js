@@ -9,13 +9,13 @@ function zoom(imgid){
         zoomelement.style.display='none'
     })
     zoomelement.addEventListener('mousemove',moveLens)
-
-
     function moveLens(e){
         e.stopPropagation()
         if(window.getComputedStyle(zoomelement).display=='none'){
             zoomelement.style.display='block'
         }
+        zoomelement.style.backgroundImage=`url(${img.src})`
+        zoomelement.style.backgroundSize=(img.width*3)+'px '+(img.height*3)+'px';
         let pos=getcursor()
         let posleft=pos.x-(zoomelement.offsetWidth/2)
         let postop=pos.y -(zoomelement.offsetHeight/2)
@@ -25,9 +25,6 @@ function zoom(imgid){
         zoomelement.style.backgroundPosition='-'+(pos.x*3)+'px -'+(pos.y*3)+'px'
     }
     function getcursor(){
-
-
-
         let e=window.event
         let bounds=img.getBoundingClientRect()
         let x=e.pageX-bounds.left
@@ -92,3 +89,23 @@ const appendAlert = (message, type) => {
 
   alertPlaceholder.append(wrapper)
 }
+
+
+
+
+
+
+function imageselect(){
+    let a=document.querySelectorAll('.imgsmall')
+    let b=document.querySelector('.imgzoomx')
+    a.forEach(element => {
+        element.addEventListener('click',(e)=>{
+            e.stopPropagation()
+            let x=element.src
+            let y=b.src
+            element.src=y
+            b.src=x
+        })
+    });
+}
+imageselect()

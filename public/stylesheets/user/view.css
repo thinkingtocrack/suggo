@@ -31,3 +31,15 @@ main{
 .disbut:disabled{
     opacity: 1;
 }
+.productsubimage{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 120px 120px 120px;
+    place-content: center;
+    width: 100%;
+    padding: 0 50px 20px 50px;
+}
+.imgsmall{
+    width: 120px;
+    height: 120px;
+}
