@@ -1,7 +1,7 @@
 const user = require('../model/users')
 const bcrypt = require('bcrypt')
-const otpFunction=require('../controller/auth')
-const {validationResult}=require('../middleware//validation')
+const otpFunction=require('../controller/otp/otpcontroller')
+const {validationResult}=require('../middleware/validation')
 const product = require('../model/product')
 
 

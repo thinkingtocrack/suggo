@@ -2,7 +2,7 @@ const express=require('express')
 const router=express.Router()
 const users=require('../model/users')
 const bcrypt=require('bcrypt')
-const {otp,sendMail}=require('../controller/auth')
+const {otp,sendMail}=require('../controller/otp/otpcontroller')
 
 
 
