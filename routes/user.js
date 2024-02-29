@@ -28,9 +28,13 @@ router.get('/user_registration',usercontroller.user_registration)
 router.post('/user_registration',userRegistration,usercontroller.user_registrationpost)
 router.get('/user_logout',seq,usercontroller.user_logout)
 router.get('/cart',seq,usercontroller.user_cart)
+router.get('/wishlist',seq,usercontroller.user_wishlist)
 router.get('/forgot_password',seq,usercontroller.user_forgotpassword)
 router.get('/wishlist/addwishlist/:id',seq,usercontroller.user_wishlistadd)
+router.get('/wishlist/removewishlist/:id',seq,usercontroller.user_wishlistremove)
 router.get('/cart/addtocart/:id',seq,usercontroller.user_cartadd)
+router.get('/cart/removecart/:id',seq,usercontroller.user_cartremove)
+
 
 
 module.exports = router;

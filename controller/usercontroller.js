@@ -102,6 +102,17 @@ const user_verify=async(req,res)=>{
     }
 }
 
+
+const user_wishlist=async(req,res)=>{
+    try {
+        const wishlist=await user.find({email:req.session.email}).select('wishlist')
+        const productlist=await product.find({_id:{$in:wishlist[0].wishlist}}).select('productname img price _id')
+        res.locals.wishlist=productlist
+        res.render('./user/wishlist.ejs')
+    } catch (error) {
+        console.log(error)
+    }
+}
 const user_wishlistadd=async(req,res)=>{
     try {
         let productid=req.params.id
@@ -116,13 +127,32 @@ const user_wishlistadd=async(req,res)=>{
         })
     }
 }
+const user_wishlistremove=async(req,res)=>{
+    try {
+        let productid=req.params.id
+        let b=await user.updateOne({ email:req.session.email }, { $pull: { wishlist: productid } })
+        res.json({
+            added:true,
+            exists:(b.modifiedCount==0)?true:false,
+        })
+    } catch (error) {
+        res.json({
+            added:false
+        })
+    }
+}
+
 
 
 const user_cart=async(req,res)=>{
-    const cartlist=await user.find({email:req.session.email}).select('cart')
-    const productlist=await product.find({_id:{$in:cartlist[0].cart}}).select('productname img price')
-    res.locals.cartlist=productlist
-    res.render('./user/cart.ejs')
+    try {
+        const cartlist=await user.find({email:req.session.email}).select('cart')
+        const productlist=await product.find({_id:{$in:cartlist[0].cart}}).select('productname img price')
+        res.locals.cartlist=productlist
+        res.render('./user/cart.ejs')
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const user_cartadd=async(req,res)=>{
@@ -140,6 +170,21 @@ const user_cartadd=async(req,res)=>{
     }
 }
 
+const user_cartremove=async(req,res)=>{
+    try {
+        let productid=req.params.id
+        let b=await user.updateOne({ email:req.session.email }, { $pull: { cart: productid } })
+        res.json({
+            added:true,
+            exists:(b.modifiedCount==0)?true:false,
+        })
+    } catch (error) {
+        res.json({
+            added:false
+        })
+    }
+}
 
 
-module.exports = {user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
+
+module.exports = {user_wishlistremove,user_cartremove,user_wishlist,user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
