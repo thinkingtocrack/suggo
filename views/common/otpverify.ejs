@@ -24,7 +24,10 @@
                 <form action="<%= otpaddress %>"  onsubmit="otpcheck(event)">
                     <div style="display: flex;flex-direction: column;gap:10px;align-items: center;">
                         <h1 style="text-align: center;">Enter OTP</h1>
-                        <input style="height: 30px;border-radius: 7px;" type="password" name="otp" id="otp" placeholder="otp">
+                        <div style="position: relative;">
+                            <input style="height: 30px;border-radius: 7px;" type="password" name="otp" id="otp" placeholder="otp">
+                            <button type="button" id="password-eye" onclick="toggleEye()">👁️</button>
+                        </div>
                         <div style="display: flex;justify-content: space-between;width: 100%;align-items: center;">
                             <p id="time" style="color: rgb(17, 0, 255);margin: 0;">resend OTP in 00:<%= otpwait %></p>
                             <button class="btn btn-dark" type="button" onclick="handleresend()" style="display: none;" id="resend" disabled>resend</button>
@@ -93,6 +96,12 @@
                     alert('OTP should be 4 digit number')
                 }
             }
+
+
+            function toggleEye(){
+            const p=document.getElementById('otp')
+            p.type= (p.type==='text')?'password':'text'
+        }
     
         </script>
 
