@@ -147,7 +147,7 @@ function previewFiles2() {
         newbutton.addEventListener('click',(e)=>{
             e.stopPropagation()
             fileremoval(i,'productfile')
-            previewFiles()
+            previewFiles2()
         })
         const image = new Image()
         image.title = file.name;
@@ -181,19 +181,19 @@ picker2.addEventListener("change", previewFiles2);
 
 function fileremoval(i,b){
     // Get the file input element
-    var fileInput = document.getElementById(b);
+    let fileInput = document.getElementById(b);
     // Get the selected files
-    var selectedFiles = fileInput.files;
+    let selectedFiles = fileInput.files;
 
     // Check if any file is selected
     if (selectedFiles.length > 0) {
       // Remove the first selected file (you can adjust the index as needed)
-      var fileToRemove = selectedFiles[i];
+      let fileToRemove = selectedFiles[i];
         
       // Create a new array without the file to be removed
-      var updatedFiles = Array.from(selectedFiles).filter(file => file !== fileToRemove);
+      let updatedFiles = Array.from(selectedFiles).filter(file => file !== fileToRemove);
     
-      var newFileList = new DataTransfer();
+      let newFileList = new DataTransfer();
         updatedFiles.forEach(file => newFileList.items.add(file));
 
         // Update the file input with the new array of files
