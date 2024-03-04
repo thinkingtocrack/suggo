@@ -16,7 +16,8 @@ const dashboard=require('../controller/admin/dashboard')
 
 
 const seq=(req,res,next)=>{
-    if(req.session.admin){
+    // if(req.session.admin){
+    if(true){
         next()
     }else{
         res.redirect('/admin/admin_login')

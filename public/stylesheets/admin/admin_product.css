@@ -64,3 +64,16 @@ main{
     padding: 3px;
     border: solid 1px black;
 }
+.imagespan{
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
+.imagespan button{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.imagespan img{
+    height: 150px;
+}

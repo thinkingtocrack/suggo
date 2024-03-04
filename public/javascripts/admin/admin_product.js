@@ -61,16 +61,26 @@ function previewFiles() {
     const preview = document.querySelector("#selectedImage");
     const files = document.querySelector("#formFileMultiple").files;
     preview.innerHTML=''
-    function readAndPreview(file) {
+    function readAndPreview(file,i) {
     const reader = new FileReader();
     reader.addEventListener(
         "load",
         () => {
+        const newSpan = document.createElement('span');
+        newSpan.classList.add('imagespan');
+        const newbutton=document.createElement('button')
+        newbutton.classList.add('btn-close')
+        newbutton.addEventListener('click',(e)=>{
+            e.stopPropagation()
+            fileremoval(i,'formFileMultiple')
+            previewFiles()
+        })
         const image = new Image()
-        image.height = 150;
         image.title = file.name;
         image.src = reader.result;
-        preview.appendChild(image);
+        newSpan.appendChild(image);
+        newSpan.appendChild(newbutton)
+        preview.appendChild(newSpan);
         },
         false,
     );
@@ -125,16 +135,26 @@ function previewFiles2() {
     const preview = document.querySelector("#selectedImage2");
     const files = document.querySelector("#productfile").files;
     preview.innerHTML=''
-    function readAndPreview(file) {
+    function readAndPreview(file,i) {
     const reader = new FileReader();
     reader.addEventListener(
         "load",
         () => {
+        const newSpan = document.createElement('span');
+        newSpan.classList.add('imagespan');
+        const newbutton=document.createElement('button')
+        newbutton.classList.add('btn-close')
+        newbutton.addEventListener('click',(e)=>{
+            e.stopPropagation()
+            fileremoval(i,'productfile')
+            previewFiles()
+        })
         const image = new Image()
-        image.height = 150;
         image.title = file.name;
         image.src = reader.result;
-        preview.appendChild(image);
+        newSpan.appendChild(image);
+        newSpan.appendChild(newbutton)
+        preview.appendChild(newSpan);
         },
         false,
     );
@@ -149,3 +169,35 @@ Array.prototype.forEach.call(files, readAndPreview);
 
 const picker2 = document.querySelector("#productfile");
 picker2.addEventListener("change", previewFiles2);
+
+
+
+
+
+
+
+
+
+
+function fileremoval(i,b){
+    // Get the file input element
+    var fileInput = document.getElementById(b);
+    // Get the selected files
+    var selectedFiles = fileInput.files;
+
+    // Check if any file is selected
+    if (selectedFiles.length > 0) {
+      // Remove the first selected file (you can adjust the index as needed)
+      var fileToRemove = selectedFiles[i];
+        
+      // Create a new array without the file to be removed
+      var updatedFiles = Array.from(selectedFiles).filter(file => file !== fileToRemove);
+    
+      var newFileList = new DataTransfer();
+        updatedFiles.forEach(file => newFileList.items.add(file));
+
+        // Update the file input with the new array of files
+        fileInput.files = newFileList.files;
+    }
+     
+}
