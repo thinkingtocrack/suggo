@@ -1,21 +1,39 @@
-async function removewishlist(a,d){
-    let removedcart=document.querySelectorAll('.removedwishlist')
+async function removewishlist(event,a){
+    let ggrand=event.target.parentNode.parentNode.parentNode
     let b=await fetch(`http://localhost:4000/user/wishlist/removewishlist/${a}`)
     b=await b.json()
     if(b?.added){
         if(b?.exists){
-            appendAlert('Product is not in your Cart','warning')
+            appendAlert('Product is not in your Wishlist','warning')
         }else{
-            removedcart[d].style.transition='opacity 1s ease-out'
-            removedcart[d].style.opacity='0'
+            ggrand.style.transition='opacity 1s ease-out'
+            ggrand.style.opacity='0'
             setTimeout(() => {
-                removedcart[d].remove()
+                ggrand.remove()
             }, 1000);
-            appendAlert('Product removed from Cart','success')
+            appendAlert('Product removed from Wishlist','success')
         }
     }else{
-        appendAlert('Error in removing from Cart','danger')
+        appendAlert('Error in removing from Wishlist','danger')
     }    
+}
+
+
+async function addToCart(event,a){
+    let c=1
+    let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}/${c}`)
+    b= await b.json()
+    if(b?.added){
+        if(b?.exists){
+            appendAlert('Product already added Cart','warning')
+            removewishlist(event,a)
+        }else{
+            appendAlert('Product added to Cart','success')
+            removewishlist(event,a)
+        }
+    }else{
+        appendAlert('Error in adding to Cart','danger')
+    }
 }
 
 

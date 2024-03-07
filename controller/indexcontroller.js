@@ -24,8 +24,7 @@ const shop = async (req, res) => {
         if (categoryarray.length > 0) {
             query.category = { $in: categoryarray };
         }
-        console.log(query)
-        const products = await product.find(query).select('productname price _id img category');
+        const products = await product.aggregate([{$match:query}])
         res.locals.filter=categoryarray
         res.locals.category=truecategory
         res.locals.products = products
@@ -38,9 +37,11 @@ const shop = async (req, res) => {
 const productpage = async (req, res) => {
     try {
         const id = req.params.id
-        const item = await product.findById(id)
-        res.render('./user/view', { item: item })
+        res.locals.varient=Number(req.params.v)
+        const item = await product.find({productId:id})
+        res.render('./user/view', { item: item})
     } catch (error) {
+        console.log(error)
         res.send(error)
     }
 }

@@ -1,3 +1,9 @@
+const currentUrl = new URL(window.location.href);
+const pathSegments = currentUrl.pathname.split('/');
+const Productid=pathSegments[3]
+
+
+
 function zoom(imgid){
     let img=document.querySelector(imgid)
     let zoomelement=document.querySelector('#zoom')
@@ -57,7 +63,8 @@ async function addwishlist(a){
 }
 
 async function addToCart(a){
-    let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}`)
+    let c=document.getElementById('qty').value
+    let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}/${c}`)
     b= await b.json()
     if(b?.added){
         if(b?.exists){
@@ -71,6 +78,21 @@ async function addToCart(a){
 }
 
 
+function rateit(){
+    let button=document.querySelectorAll('.ratestar button')
+    button.forEach((a,i)=>{
+        a.addEventListener('click',async(e)=>{
+            e.stopPropagation()
+            await ratesend(i)
+        })
+    })
+}
+rateit()
+async function ratesend(i){
+    let a=await fetch(`/user/rate/${Productid}/${i}`)
+    a=await a.json()
+
+}
 
 
 
@@ -109,3 +131,15 @@ function imageselect(){
     });
 }
 imageselect()
+
+
+function addnumselect(){
+    let a=document.getElementById('qty')
+    for(i=1;i<=10;i++){
+        let option=document.createElement('option')
+        option.innerHTML=`${i}`
+        option.value=i
+        a.appendChild(option)
+    }
+}
+addnumselect()

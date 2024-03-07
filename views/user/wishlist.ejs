@@ -19,12 +19,13 @@
                 <% wishlist.forEach((element,i) => { %>
                     <li class="list-group-item list-group-item-dark removedwishlist">
                         <div class="cartbox">
-                            <img class="cartimage" src="data:image/png;base64,<%= element.img[0].data %>" alt="<%= element.productname %>">
+                            <img class="cartimage" src="/uploads/<%= element.varient.image[0] %>" alt="<%= element.productname %>">
                             <div>
                                 <h5><%= element.productname %></h5>
-                                <button type="button" onclick=<%= `removewishlist('${element._id}',${i})` %> class="btn btn-danger">Remove</button>
+                                <button type="button" onclick=<%= `removewishlist(event,'${element._id}')` %> class="btn btn-danger">Remove</button>
+                                <button class="btn btn-primary" onclick=<%= `addToCart(event,'${element._id}')` %>>Add to cart</button>
                             </div>
-                            <p style="font-size:large;font-weight: bold;"> Rs.<%= element.price %></p>
+                            <p style="font-size:large;font-weight: bold;"> Rs.<%= element.varient.price %></p>
                         </div>
                     </li>
                 <% }); %> 

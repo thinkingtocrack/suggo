@@ -14,7 +14,11 @@
 }
 main{
     background-color: rgb(233, 233, 233);
-    padding: 35px 90px 35px 90px;
+    padding: 0px 40px 10px 40px;
+}
+.submain{
+    background-color: rgb(233, 233, 233);
+    padding: 5px 90px 35px 90px;
     display: flex;
     gap:2px
 }
@@ -42,4 +46,28 @@ main{
 .imgsmall{
     width: 120px;
     height: 120px;
+}
+.breadx{
+    padding-top: 20px;
+    padding-left: 90px;
+}
+.breadx a{
+    text-decoration: none;
+    color: black;
+}
+.review{
+    padding: 0 90px 0 90px;
+    background-color: rgb(233, 233, 233);
+}
+.review-main{
+    background-color: white;
+    padding: 10px 20px 10px 20px;
+    border-radius: 10px;
+}
+.ratestar button{
+    border: none;
+    background-color: rgb(255, 0, 0);
+}
+.ratestar button:hover,.ratestar button:hover ~ button{
+    background-color: rgb(255, 255, 255);
 }

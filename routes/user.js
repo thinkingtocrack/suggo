@@ -34,7 +34,7 @@ router.post('/forgot_password',userMiddleware.forgetpasswordseq,usercontroller.u
 router.post('/forgot_password/check',userMiddleware.forgetpasswordseq,usercontroller.user_checkforgotpasswordPOST)
 router.get('/wishlist/addwishlist/:id',seq,usercontroller.user_wishlistadd)
 router.get('/wishlist/removewishlist/:id',seq,usercontroller.user_wishlistremove)
-router.get('/cart/addtocart/:id',seq,usercontroller.user_cartadd)
+router.get('/cart/addtocart/:id/:qty',seq,usercontroller.user_cartadd)
 router.get('/cart/removecart/:id',seq,usercontroller.user_cartremove)
 
 

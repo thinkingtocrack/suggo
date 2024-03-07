@@ -12,7 +12,7 @@ router.use(cart)
 
 router.get('/', indexcontroller.homepage)
 router.get('/shop',indexcontroller.shop)
-router.get('/shop/view/:id',indexcontroller.productpage)
+router.get('/shop/view/:id/:v',indexcontroller.productpage)
 
 
 

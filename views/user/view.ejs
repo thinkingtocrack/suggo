@@ -11,51 +11,111 @@
 <body>
     <%- include('./partials/header.ejs') %>
     <main>
-        <div class="productimage">
-            <div class="img-container">
-                <div id="zoom"></div>
-                <% if(locals.item.img){ %>
-                    <img class="imgzoomx" src="data:image/png;base64,<%= item.img[0].data %>" alt="...">
-                <% }; %>
+
+        <nav aria-label="breadcrumb" class="breadx">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+              <li class="breadcrumb-item active" aria-current="page"><%= item[varient].productname %></li>
+            </ol>
+        </nav>
+
+        <% if(item[varient].varient.stock==0) {%>
+        <div style="position: absolute;top: 180px;right: 30%;" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Out of Stock</strong> The product <%= item[varient].productname %> is out of stock
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <% } %>
+
+        <div class="submain">
+            <div class="productimage">
+                <div class="img-container">
+                    <div id="zoom"></div>
+                    <% if(locals.item){ %>
+                        <img class="imgzoomx" src="/uploads/<%=item[varient].varient.image[0] %>" alt="...">
+                    <% }; %>
+                </div>
+                <% if(item[varient].varient.image.length>1) {%>
+                    <div class="productsubimage">
+                        <% for(i=1;i<item[varient].varient.image.length;i++){ %>
+                            <img class="imgsmall" src="/uploads/<%= item[varient].varient.image[i] %>" alt="...">
+                        <% } %>
+                    </div>
+                <% } %>
             </div>
-            <% if(item.img.length>1) {%>
-                <div class="productsubimage">
-                    <% for(i=1;i<4;i++){ %>
-                        <img class="imgsmall" src="data:image/png;base64,<%= item.img[i].data %>" alt="...">
+            <div class="product">
+                <div style="display: flex;width: 100%;justify-content: space-between;">
+                    <p style="display: inline;font-size: x-large;font-weight: 400;"><%= item[varient].productname %></p>
+                    <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add wishlist"<% } %>>
+                        <button onclick=<%=`addwishlist('${item[varient]._id}')` %> style="scale: 1.2;"  type="button" class="btn btn-light btn-lg disbut"<%if(!locals.auth){  %>  disabled<% } %>>❤️</button>
+                    </span>
+                </div>
+                
+    
+                <div style="position: absolute;top: 210px;left: 80%;z-index: 1000;" id="liveAlertPlaceholder"></div>
+    
+    
+                <div>
+                    <h6 style="color: gray;">BRAND:<%= item[varient].brand %></h6>
+                </div>
+                <hr style="border-color: rgb(225, 225, 225);">
+                <div style="margin-top: 30px;">
+                    <h3 style="display: inline;color: red;">Rs. <%= item[varient].varient.price %></h3>
+                    <p style="display: inline;color: gray;">(Inclusive of all taxes)</p>
+                </div>
+                <div style="margin-top: 10px;width: 100%;height:190px;">
+                    <p><%= item[varient].description %></p>
+                </div>
+                <div style="margin-bottom: 40px; display: flex;justify-content: space-between;align-items: center;">
+                    <div>
+                        <label style="font-size: large;" for="qty">Quantity</label>
+                        <select style="height: 40px;width: 60px;" name="" id="qty">
+                        </select>
+                    </div>
+                    <div>
+                        <h3>Colors Available</h3>
+                        <% locals.item.forEach((element,i) => { %>
+                            <% if(i==varient){ %>
+                                <a href="/shop/view/<%= element.productId %>/<%= i %>" class="btn btn-secondary"><%= element.varient.color %></a>
+                            <% }else{ %>
+                                <a href="/shop/view/<%= element.productId %>/<%= i %>" class="btn btn-secondary"><%= element.varient.color %></a>
+                            <% } %>
+                        <% }); %>
+                    </div>
+                </div>
+                <% if(item[varient].varient.stock==0){ %>
+                    <div>
+                        <h1>out of stock</h1>
+                    </div>
+                <% } %>
+                <div style="display: flex;gap: 10px;align-items: center;">
+                    <% if(item[varient].varient.stock==0){ %>
+                        <span>
+                            <form class="form-floating">
+                                <input type="email" class="form-control" id="floatingInputValue" placeholder="name@example.com" >
+                                <label for="floatingInputValue">Enter email to get notified</label>
+                            </form>
+                        </span>
+                        <button type="button" class="btn btn-danger btn-lg">Notify Me</button>
+                    <% }else{ %>
+                    <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add to cart"<% } %>>
+                        <button onclick=<%=`addToCart('${item[varient]._id}')` %> type="button" <%if(!locals.auth){  %> disabled<% } %> class="btn btn-dark btn-lg disbut">ADD TO CART</button>
+                    </span>
+                    <button type="button" class="btn btn-danger btn-lg">BUY NOW</button>
                     <% } %>
                 </div>
-            <% } %>
-        </div>
-        <div class="product">
-            <div style="display: flex;width: 100%;justify-content: space-between;">
-                <p style="display: inline;font-size: x-large;font-weight: 400;"><%= item.productname %></p>
-                <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add wishlist"<% } %>>
-                    <button onclick=<%=`addwishlist('${item._id}')` %> style="scale: 1.2;"  type="button" class="btn btn-light btn-lg disbut"<%if(!locals.auth){  %>  disabled<% } %>>❤️</button>
-                </span>
-            </div>
-            
-
-            <div style="position: absolute;top: 210px;left: 80%;z-index: 1000;" id="liveAlertPlaceholder"></div>
-
-
-            <div>
-                <h6 style="color: gray;">BRAND:<%= item.brand %></h6>
-            </div>
-            <hr style="border-color: rgb(225, 225, 225);">
-            <div style="margin-top: 30px;">
-                <h3 style="display: inline;color: red;">Rs. <%= item.price %></h3>
-                <p style="display: inline;color: gray;">(Inclusive of all taxes)</p>
-            </div>
-            <div style="margin-top: 10px;width: 100%;height:250px;">
-                <p><%= item.description %></p>
-            </div>
-            <div style="margin-top: 10px;">
-                <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add to cart"<% } %>>
-                    <button onclick=<%=`addToCart('${item._id}')` %> type="button" <%if(!locals.auth){  %> disabled<% } %> class="btn btn-dark btn-lg disbut">ADD TO CART</button>
-                </span>
-                <button type="button" class="btn btn-danger btn-lg">BUY NOW</button>
             </div>
         </div>
+        <div class="review">
+            <div class="review-main">
+                <p style="font-size: xx-large;font-weight: 700;">Ratings & Reviews</p>
+                <span class="ratestar">
+                    <button>⭐</button><button>⭐</button><button>⭐</button><button>⭐</button><button>⭐</button>
+                </span>
+                <button>Rateit</button>
+            </div>
+        </div>
+        
     </main>
     <%- include('./partials/footer.ejs') %>
 

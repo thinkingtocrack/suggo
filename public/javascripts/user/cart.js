@@ -1,15 +1,17 @@
-async function removecart(a,d){
-    let removedcart=document.querySelectorAll('.removedcart')
+async function removecart(event,a){
+    let parent=event.target.parentNode
+    let grand=parent.parentNode
+    let ggrand=grand.parentNode
     let b=await fetch(`http://localhost:4000/user/cart/removecart/${a}`)
     b=await b.json()
     if(b?.added){
         if(b?.exists){
             appendAlert('Product is not in your Cart','warning')
         }else{
-            removedcart[d].style.transition='opacity 1s ease-out'
-            removedcart[d].style.opacity='0'
+            ggrand.style.transition='opacity 1s ease-out'
+            ggrand.style.opacity='0'
             setTimeout(() => {
-                removedcart[d].remove()
+                ggrand.remove()
             }, 1000);
             appendAlert('Product removed from Cart','success')
         }
@@ -30,4 +32,50 @@ const appendAlert = (message, type) => {
   ].join('')
 
   alertPlaceholder.append(wrapper)
+}
+
+
+
+async function qtychange(event,id){
+    await addToCart(event,id)
+    totalcalculator()
+}
+
+function totalcalculator(){
+    let price=document.querySelectorAll('.price')
+    let qty=document.querySelectorAll('.qty')
+    let total=0
+    for(i=0;i<price.length;i++){
+        newprice=Number(price[i].innerHTML.slice(4))
+        total+=Number(qty[i].value)*newprice
+    }
+    document.querySelector('#totalprice').innerHTML=`₹${total}`
+    if(price.length<1){
+        document.querySelector('#delcharge').innerHTML=`0`
+        document.querySelector('#totalcost').innerHTML=`₹${total}`
+    }
+    else if(total>=1000){
+        document.querySelector('#delcharge').innerHTML=`Free`
+        document.querySelector('#totalcost').innerHTML=`₹${total}`
+    }else{
+        document.querySelector('#delcharge').innerHTML=`₹100`
+        document.querySelector('#totalcost').innerHTML=`₹${total+100}`
+    }
+}
+totalcalculator()
+
+
+async function addToCart(d,a){
+    let c=d.target.value
+    let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}/${c}`)
+    b= await b.json()
+    if(b?.added){
+        if(b?.exists){
+            appendAlert('product quantity not changed','warning')
+        }else{
+            appendAlert('Product quantity has ben changed','success')
+        }
+    }else{
+        appendAlert('Error in chaning to Cart','danger')
+    }
 }

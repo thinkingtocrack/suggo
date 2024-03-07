@@ -159,7 +159,7 @@ const user_verify=async(req,res)=>{
 const user_wishlist=async(req,res)=>{
     try {
         const wishlist=await user.find({email:req.session.email}).select('wishlist')
-        const productlist=await product.find({_id:{$in:wishlist[0].wishlist}}).select('productname img price _id')
+        const productlist=await product.find({_id:{$in:wishlist[0].wishlist}}).select('productname varient')
         res.locals.wishlist=productlist
         res.render('./user/wishlist.ejs')
     } catch (error) {
@@ -200,8 +200,13 @@ const user_wishlistremove=async(req,res)=>{
 const user_cart=async(req,res)=>{
     try {
         const cartlist=await user.find({email:req.session.email}).select('cart')
-        const productlist=await product.find({_id:{$in:cartlist[0].cart}}).select('productname img price')
+        const cartlistid=cartlist[0].cart.map((a)=>{
+            return a.productid
+        })
+        const cartlistqty=cartlist[0].cart.map(a=>a.qty)
+        const productlist=await product.find({_id:{$in:cartlistid}}).select('productname varient')
         res.locals.cartlist=productlist
+        res.locals.cartqtylist=cartlistqty
         res.render('./user/cart.ejs')
     } catch (error) {
         console.log(error)
@@ -211,12 +216,25 @@ const user_cart=async(req,res)=>{
 const user_cartadd=async(req,res)=>{
     try {
         let productid=req.params.id
-        let b=await user.updateMany({email:req.session.email}, { $addToSet: { cart: productid } })
+        let qty=req.params.qty
+        let existingProduct = await user.updateMany(
+            {
+                email: req.session.email,
+                cart: { $elemMatch: { productid: productid } }
+            },
+            {
+                $set: { "cart.$.qty": qty }
+            }
+        );
+        if(existingProduct.modifiedCount === 0){
+            var b=await user.updateMany({email:req.session.email}, { $addToSet: { cart: {productid:productid,qty:qty}} })
+        }
         res.json({
             added:true,
-            exists:(b.modifiedCount==0)?true:false,
+            exists:(b?.modifiedCount==0)?true:false,
         })
     } catch (error) {
+        console.log(error)
         res.json({
             added:false
         })
@@ -226,7 +244,7 @@ const user_cartadd=async(req,res)=>{
 const user_cartremove=async(req,res)=>{
     try {
         let productid=req.params.id
-        let b=await user.updateOne({ email:req.session.email }, { $pull: { cart: productid } })
+        let b=await user.updateOne({ email:req.session.email }, { $pull: { cart: {productid:productid }} })
         res.json({
             added:true,
             exists:(b.modifiedCount==0)?true:false,

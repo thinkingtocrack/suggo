@@ -12,3 +12,10 @@ main{
     display: grid;
     grid-template-columns: .5fr 2fr .2fr;
 }
+.cart-list{
+    display: flex;
+    gap: 20px;
+}
+.cart-totalprice{
+    flex:.6;
+}
