@@ -32,11 +32,18 @@ router.get('/wishlist',seq,usercontroller.user_wishlist)
 router.get('/forgot_password',userMiddleware.forgetpasswordseq,usercontroller.user_forgotpassword)
 router.post('/forgot_password',userMiddleware.forgetpasswordseq,usercontroller.user_forgotpasswordPOST)
 router.post('/forgot_password/check',userMiddleware.forgetpasswordseq,usercontroller.user_checkforgotpasswordPOST)
+<<<<<<< HEAD
 router.get('/wishlist/addwishlist/:id/:v',seq,usercontroller.user_wishlistadd)
 router.get('/wishlist/removewishlist/:id/:v',seq,usercontroller.user_wishlistremove)
 router.get('/cart/addtocart/:id/:v/:qty',seq,usercontroller.user_cartadd)
 router.get('/cart/removecart/:id/:v',seq,usercontroller.user_cartremove)
 router.get('/rateproduct/:id/:v',seq,usercontroller.user_rateproduct)
+=======
+router.get('/wishlist/addwishlist/:id',seq,usercontroller.user_wishlistadd)
+router.get('/wishlist/removewishlist/:id',seq,usercontroller.user_wishlistremove)
+router.get('/cart/addtocart/:id/:qty',seq,usercontroller.user_cartadd)
+router.get('/cart/removecart/:id',seq,usercontroller.user_cartremove)
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
 
 
 // account related

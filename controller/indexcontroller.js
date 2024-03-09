@@ -24,7 +24,11 @@ const shop = async (req, res) => {
         if (categoryarray.length > 0) {
             query.category = { $in: categoryarray };
         }
+<<<<<<< HEAD
         const products = await product.aggregate([{$match:query},{$unwind:'$varient'}])
+=======
+        const products = await product.aggregate([{$match:query}])
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
         res.locals.filter=categoryarray
         res.locals.category=truecategory
         res.locals.products = products
@@ -37,6 +41,7 @@ const shop = async (req, res) => {
 const productpage = async (req, res) => {
     try {
         const id = req.params.id
+<<<<<<< HEAD
         const item = await product.aggregate([{$match:{productId:id}},{$unwind:'$varient'},{ $match: { 'varient.id': Number(req.params.v) } }])
         const rate = await product.aggregate([
             { $match: { productId: id } },
@@ -55,6 +60,10 @@ const productpage = async (req, res) => {
         res.locals.similar=similar
         res.locals.varient=varient
         res.locals.totalrate=rate
+=======
+        res.locals.varient=Number(req.params.v)
+        const item = await product.find({productId:id})
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
         res.render('./user/view', { item: item})
     } catch (error) {
         console.log(error)

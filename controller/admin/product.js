@@ -3,7 +3,10 @@ const categorys = require('../../model/category')
 const category = require('../../model/category')
 const product = require('../../model/product')
 const crypto = require("crypto");
+<<<<<<< HEAD
 
+=======
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
 
 
 
@@ -11,7 +14,7 @@ const product_home = async (req, res) => {
     try {
         const data = await categorys.find().select('category')
         const items = await products.find()
-        res.render('./admin/admin_product', { data: items ,dark:1,category:data})
+        res.render('./admin/admin_product2', { data: items ,dark:1,category:data})
     } catch (error) {
         res.send(error)
     }
@@ -50,16 +53,43 @@ const product_status=async (req, res) => {
     }
 }
 
+// const product_new_post=async(req,res)=>{
+//     try {
+//         let data = req.body
+//         data.status = Boolean(Number(req.params.id))
+//         let arrayimage = req.files.map((a) => {
+//             return {
+//                 data: a.buffer.toString('base64'),
+//                 contentType: a.mimetype,
+//             }
+//         })
+//         data.img = arrayimage
+//         await products.create(data)
+//         res.redirect('/admin/product')
+//     } catch (error) {
+//         res.send(error)
+//     }
+// }
 const product_new_post=async(req,res)=>{
     try {
+<<<<<<< HEAD
         do{
             var productId = crypto.randomInt(1000000,10000000);
             var vid=crypto.randomInt(100,999);
             let z=await product.find({productId:productId})
+=======
+        let k=0
+        let data={}
+        n=0
+        do{
+            n = crypto.randomInt(1000000,10000000);
+            let z=await product.find({productId:n})
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
             if(z.length==0){
                 break;
             }
         }while(true)
+<<<<<<< HEAD
         let arrayimage = req.files.map((a) => {
             return a.filename
         })
@@ -114,8 +144,39 @@ const product_new_varient=async(req,res)=>{
     } catch (error) {
         console.log(error)
         res.send(error)
+=======
+        data.productId=n
+        data.productname=req.body.productname
+        data.category=req.body.category
+        data.brand=req.body.brand
+        data.description=req.body.description
+        data.status= Boolean(Number(req.params.id))
+        data.varient=[]
+        for(i=0;i<req.body.color.length;i++){
+            let img=req.files.slice(k,k+Number(req.body.imagenum[i]))
+            let imgx=[]
+            for(j=0;j<img.length;j++){
+                imgx.push(img[j].filename)
+            }
+            console.log(imgx)
+            data.varient={
+                id:`${i}`,
+                color:req.body.color[i],
+                stock:req.body.stock[i],
+                image:imgx,
+                price:req.body.price[i],
+            }
+            k=k+Number(req.body.imagenum[i])
+            await product.create(data)
+        }
+        res.redirect('/admin/product')
+    } catch (error) {
+        console.log(error)
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
     }
 }
+
+
 
 const product_edit_post=async(req,res)=>{
     const product = await products.findById(req.params.id)

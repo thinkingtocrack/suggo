@@ -16,6 +16,7 @@
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
               <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+<<<<<<< HEAD
               <li class="breadcrumb-item active" aria-current="page"><%= item[0].productname %></li>
             </ol>
         </nav>
@@ -23,6 +24,15 @@
         <% if(item[0].varient.stock==0) {%>
         <div style="position: absolute;top: 180px;right: 30%;" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Out of Stock</strong> The product <%= item[0].productname %> is out of stock
+=======
+              <li class="breadcrumb-item active" aria-current="page"><%= item[varient].productname %></li>
+            </ol>
+        </nav>
+
+        <% if(item[varient].varient.stock==0) {%>
+        <div style="position: absolute;top: 180px;right: 30%;" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Out of Stock</strong> The product <%= item[varient].productname %> is out of stock
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <% } %>
@@ -32,6 +42,7 @@
                 <div class="img-container">
                     <div id="zoom"></div>
                     <% if(locals.item){ %>
+<<<<<<< HEAD
                         <img class="imgzoomx" src="/uploads/<%=item[0].varient.image[0] %>" alt="...">
                     <% }; %>
                 </div>
@@ -39,15 +50,30 @@
                     <div class="productsubimage">
                         <% for(i=1;i<item[0].varient.image.length;i++){ %>
                             <img class="imgsmall" src="/uploads/<%= item[0].varient.image[i] %>" alt="...">
+=======
+                        <img class="imgzoomx" src="/uploads/<%=item[varient].varient.image[0] %>" alt="...">
+                    <% }; %>
+                </div>
+                <% if(item[varient].varient.image.length>1) {%>
+                    <div class="productsubimage">
+                        <% for(i=1;i<item[varient].varient.image.length;i++){ %>
+                            <img class="imgsmall" src="/uploads/<%= item[varient].varient.image[i] %>" alt="...">
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                         <% } %>
                     </div>
                 <% } %>
             </div>
             <div class="product">
                 <div style="display: flex;width: 100%;justify-content: space-between;">
+<<<<<<< HEAD
                     <p style="display: inline;font-size: x-large;font-weight: 400;"><%= item[0].productname %></p>
                     <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add wishlist"<% } %>>
                         <button onclick=<%=`addwishlist('${item[0]._id}',${item[0].varient.id})` %> style="scale: 1.2;"  type="button" class="btn btn-light btn-lg disbut"<%if(!locals.auth){  %>  disabled<% } %>>❤️</button>
+=======
+                    <p style="display: inline;font-size: x-large;font-weight: 400;"><%= item[varient].productname %></p>
+                    <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add wishlist"<% } %>>
+                        <button onclick=<%=`addwishlist('${item[varient]._id}')` %> style="scale: 1.2;"  type="button" class="btn btn-light btn-lg disbut"<%if(!locals.auth){  %>  disabled<% } %>>❤️</button>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                     </span>
                 </div>
                 
@@ -56,6 +82,7 @@
     
     
                 <div>
+<<<<<<< HEAD
                     <h6 style="color: gray;">BRAND:<%= item[0].brand %></h6>
                 </div>
                 <hr style="border-color: rgb(225, 225, 225);">
@@ -65,6 +92,17 @@
                 </div>
                 <div style="margin-top: 10px;width: 100%;height:190px;">
                     <p><%= item[0].description %></p>
+=======
+                    <h6 style="color: gray;">BRAND:<%= item[varient].brand %></h6>
+                </div>
+                <hr style="border-color: rgb(225, 225, 225);">
+                <div style="margin-top: 30px;">
+                    <h3 style="display: inline;color: red;">Rs. <%= item[varient].varient.price %></h3>
+                    <p style="display: inline;color: gray;">(Inclusive of all taxes)</p>
+                </div>
+                <div style="margin-top: 10px;width: 100%;height:190px;">
+                    <p><%= item[varient].description %></p>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                 </div>
                 <div style="margin-bottom: 40px; display: flex;justify-content: space-between;align-items: center;">
                     <div>
@@ -74,22 +112,38 @@
                     </div>
                     <div>
                         <h3>Colors Available</h3>
+<<<<<<< HEAD
                         <% locals.varient.forEach((element) => { %>
                             <% if(element.varient.id==item[0].varient.id){ %>
                                 <a href="/shop/view/<%= item[0].productId %>/<%= element.varient.id %>" class="btn btn-secondary disabled"><%= element.varient.color %></a>
                             <% }else{ %>
                                 <a href="/shop/view/<%= item[0].productId %>/<%= element.varient.id %>" class="btn btn-secondary"><%= element.varient.color %></a>
+=======
+                        <% locals.item.forEach((element,i) => { %>
+                            <% if(i==varient){ %>
+                                <a href="/shop/view/<%= element.productId %>/<%= i %>" class="btn btn-secondary"><%= element.varient.color %></a>
+                            <% }else{ %>
+                                <a href="/shop/view/<%= element.productId %>/<%= i %>" class="btn btn-secondary"><%= element.varient.color %></a>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                             <% } %>
                         <% }); %>
                     </div>
                 </div>
+<<<<<<< HEAD
                 <% if(item[0].varient.stock==0){ %>
+=======
+                <% if(item[varient].varient.stock==0){ %>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                     <div>
                         <h1>out of stock</h1>
                     </div>
                 <% } %>
                 <div style="display: flex;gap: 10px;align-items: center;">
+<<<<<<< HEAD
                     <% if(item[0].varient.stock==0){ %>
+=======
+                    <% if(item[varient].varient.stock==0){ %>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                         <span>
                             <form class="form-floating">
                                 <input type="email" class="form-control" id="floatingInputValue" placeholder="name@example.com" >
@@ -99,11 +153,16 @@
                         <button type="button" class="btn btn-danger btn-lg">Notify Me</button>
                     <% }else{ %>
                     <span <%if(!locals.auth){  %> class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="login to add to cart"<% } %>>
+<<<<<<< HEAD
                         <button onclick=<%=`addToCart('${item[0]._id}',${item[0].varient.id})` %> type="button" <%if(!locals.auth){  %> disabled<% } %> class="btn btn-dark btn-lg disbut">ADD TO CART</button>
+=======
+                        <button onclick=<%=`addToCart('${item[varient]._id}')` %> type="button" <%if(!locals.auth){  %> disabled<% } %> class="btn btn-dark btn-lg disbut">ADD TO CART</button>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                     </span>
                     <button type="button" class="btn btn-danger btn-lg">BUY NOW</button>
                     <% } %>
                 </div>
+<<<<<<< HEAD
             </div>
         </div>
         <div class="submain2">
@@ -152,6 +211,19 @@
                 <% } %>
             </div>
         </div>
+=======
+            </div>
+        </div>
+        <div class="review">
+            <div class="review-main">
+                <p style="font-size: xx-large;font-weight: 700;">Ratings & Reviews</p>
+                <span class="ratestar">
+                    <button>⭐</button><button>⭐</button><button>⭐</button><button>⭐</button><button>⭐</button>
+                </span>
+                <button>Rateit</button>
+            </div>
+        </div>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
         
     </main>
     <%- include('./partials/footer.ejs') %>

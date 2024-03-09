@@ -5,6 +5,11 @@ const products=require('../model/product')
 
 const multer = require('multer')
 const category = require('../controller/admin/category')
+<<<<<<< HEAD
+=======
+// const storage = multer.memoryStorage()
+// const upload = multer({ storage: storage })
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
 const upload = multer({ dest: 'public/uploads/' })
 const categorys=require('../model/category')
 const login=require('../controller/admin/login')
@@ -43,8 +48,12 @@ router.get('/customer/deleteuser/:id',seq,customer.customer_delete)
 
 
 router.get('/product', seq,product.product_home )
+<<<<<<< HEAD
 router.post('/product/new/:id', seq,upload.array('testImage', 8),product.product_new_post)
 router.post('/product/newvarient/:id', seq,upload.array('testImage', 8),product.product_new_varient)
+=======
+router.post('/product/new/:id', seq,upload.array('testImage', 24),product.product_new_post)
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
 router.get('/product/deleteproduct/:id',seq,product.product_delete)
 router.post('/product/status', seq, product.product_status)
 router.get('/product/edit/:id',seq,product.product_edit)

@@ -160,6 +160,7 @@ const user_verify=async(req,res)=>{
 
 const user_wishlist=async(req,res)=>{
     try {
+<<<<<<< HEAD
         const wishlist=await user.findOne({email:req.session.email}).select('wishlist')
         let productid=[]
         let varientid=[]
@@ -168,6 +169,10 @@ const user_wishlist=async(req,res)=>{
             varientid.push(Number(element.varientid))
         })
         const productlist=await product.aggregate([{$match:{_id:{$in:productid.map(id => new mongoose.Types.ObjectId(id))}}},{$unwind:'$varient'},{$match:{'varient.id':{$in:varientid}}}])
+=======
+        const wishlist=await user.find({email:req.session.email}).select('wishlist')
+        const productlist=await product.find({_id:{$in:wishlist[0].wishlist}}).select('productname varient')
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
         res.locals.wishlist=productlist
         res.render('./user/wishlist.ejs')
     } catch (error) {
@@ -211,6 +216,7 @@ const user_wishlistremove=async(req,res)=>{
 const user_cart=async(req,res)=>{
     try {
         const cartlist=await user.find({email:req.session.email}).select('cart')
+<<<<<<< HEAD
         const varientidlist=[]
         const cartlistid=cartlist[0].cart.map((a)=>{
             varientidlist.push(Number(a.varientid))
@@ -218,6 +224,13 @@ const user_cart=async(req,res)=>{
         })
         const cartlistqty=cartlist[0].cart.map(a=>a.qty)
         const productlist=await product.aggregate([{$match:{_id:{$in:cartlistid.map(id => new mongoose.Types.ObjectId(id))}}},{$unwind:'$varient'},{$match:{'varient.id':{$in:varientidlist}}}])
+=======
+        const cartlistid=cartlist[0].cart.map((a)=>{
+            return a.productid
+        })
+        const cartlistqty=cartlist[0].cart.map(a=>a.qty)
+        const productlist=await product.find({_id:{$in:cartlistid}}).select('productname varient')
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
         res.locals.cartlist=productlist
         res.locals.cartqtylist=cartlistqty
         res.render('./user/cart.ejs')
@@ -230,18 +243,29 @@ const user_cartadd=async(req,res)=>{
     try {
         let productid=req.params.id
         let qty=req.params.qty
+<<<<<<< HEAD
         let varientid=req.params.v
         let existingProduct = await user.updateMany(
             {
                 email: req.session.email,
                 cart: { $elemMatch: { productid: productid ,varientid:varientid} }
+=======
+        let existingProduct = await user.updateMany(
+            {
+                email: req.session.email,
+                cart: { $elemMatch: { productid: productid } }
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
             },
             {
                 $set: { "cart.$.qty": qty }
             }
         );
         if(existingProduct.modifiedCount === 0){
+<<<<<<< HEAD
             var b=await user.updateMany({email:req.session.email}, { $addToSet: { cart: {productid:productid,qty:qty,varientid:varientid}} })
+=======
+            var b=await user.updateMany({email:req.session.email}, { $addToSet: { cart: {productid:productid,qty:qty}} })
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
         }
         res.json({
             added:true,
@@ -258,8 +282,12 @@ const user_cartadd=async(req,res)=>{
 const user_cartremove=async(req,res)=>{
     try {
         let productid=req.params.id
+<<<<<<< HEAD
         let varientid=req.params.v
         let b=await user.updateOne({ email:req.session.email }, { $pull: { cart: {productid:productid ,varientid:varientid}} })
+=======
+        let b=await user.updateOne({ email:req.session.email }, { $pull: { cart: {productid:productid }} })
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
         res.json({
             added:true,
             exists:(b.modifiedCount==0)?true:false,

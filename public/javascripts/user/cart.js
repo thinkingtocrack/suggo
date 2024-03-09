@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 async function removecart(event,a,c){
     let parent=event.target.parentNode
     let grand=parent.parentNode
     let ggrand=grand.parentNode
     let b=await fetch(`http://localhost:4000/user/cart/removecart/${a}/${c}`)
+=======
+async function removecart(event,a){
+    let parent=event.target.parentNode
+    let grand=parent.parentNode
+    let ggrand=grand.parentNode
+    let b=await fetch(`http://localhost:4000/user/cart/removecart/${a}`)
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
     b=await b.json()
     if(b?.added){
         if(b?.exists){
@@ -36,8 +44,13 @@ const appendAlert = (message, type) => {
 
 
 
+<<<<<<< HEAD
 async function qtychange(event,id,vid){
     await addToCart(event,id,vid)
+=======
+async function qtychange(event,id){
+    await addToCart(event,id)
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
     totalcalculator()
 }
 
@@ -65,9 +78,15 @@ function totalcalculator(){
 totalcalculator()
 
 
+<<<<<<< HEAD
 async function addToCart(d,a,v){
     let c=d.target.value
     let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}/${v}/${c}`)
+=======
+async function addToCart(d,a){
+    let c=d.target.value
+    let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}/${c}`)
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
     b= await b.json()
     if(b?.added){
         if(b?.exists){

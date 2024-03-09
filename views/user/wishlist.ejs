@@ -22,8 +22,13 @@
                             <img class="cartimage" src="/uploads/<%= element.varient.image[0] %>" alt="<%= element.productname %>">
                             <div>
                                 <h5><%= element.productname %></h5>
+<<<<<<< HEAD
                                 <button type="button" onclick=<%= `removewishlist(event,'${element._id}',${element.varient.id})` %> class="btn btn-danger">Remove</button>
                                 <button class="btn btn-primary" onclick=<%= `addToCart(event,'${element._id}',${element.varient.id})` %>>Add to cart</button>
+=======
+                                <button type="button" onclick=<%= `removewishlist(event,'${element._id}')` %> class="btn btn-danger">Remove</button>
+                                <button class="btn btn-primary" onclick=<%= `addToCart(event,'${element._id}')` %>>Add to cart</button>
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
                             </div>
                             <p style="font-size:large;font-weight: bold;"> Rs.<%= element.varient.price %></p>
                         </div>

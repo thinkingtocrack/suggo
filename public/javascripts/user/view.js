@@ -62,9 +62,15 @@ async function addwishlist(a,id){
     }
 }
 
+<<<<<<< HEAD
 async function addToCart(a,f){
     let c=document.getElementById('qty').value
     let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}/${f}/${c}`)
+=======
+async function addToCart(a){
+    let c=document.getElementById('qty').value
+    let b=await fetch(`http://localhost:4000/user/cart/addtocart/${a}/${c}`)
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
     b= await b.json()
     if(b?.added){
         if(b?.exists){
@@ -78,6 +84,7 @@ async function addToCart(a,f){
 }
 
 
+<<<<<<< HEAD
 // function rateit(){
 //     let button=document.querySelectorAll('.ratestar button')
 //     button.forEach((a,i)=>{
@@ -93,6 +100,23 @@ async function addToCart(a,f){
 //     a=await a.json()
     
 // }
+=======
+function rateit(){
+    let button=document.querySelectorAll('.ratestar button')
+    button.forEach((a,i)=>{
+        a.addEventListener('click',async(e)=>{
+            e.stopPropagation()
+            await ratesend(i)
+        })
+    })
+}
+rateit()
+async function ratesend(i){
+    let a=await fetch(`/user/rate/${Productid}/${i}`)
+    a=await a.json()
+
+}
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
 
 
 

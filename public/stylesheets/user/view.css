@@ -18,7 +18,11 @@ main{
 }
 .submain{
     background-color: rgb(233, 233, 233);
+<<<<<<< HEAD
     padding: 5px 90px 15px 90px;
+=======
+    padding: 5px 90px 35px 90px;
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
     display: flex;
     gap:2px
 }
@@ -56,6 +60,7 @@ main{
     text-decoration: none;
     color: black;
 }
+<<<<<<< HEAD
 .submain2{
     padding: 0 90px 0 90px;
     background-color: rgb(233, 233, 233);
@@ -119,4 +124,21 @@ main{
     padding: 10px 20px 10px 20px;
     border-radius: 10px;
     display: flex;
+=======
+.review{
+    padding: 0 90px 0 90px;
+    background-color: rgb(233, 233, 233);
+}
+.review-main{
+    background-color: white;
+    padding: 10px 20px 10px 20px;
+    border-radius: 10px;
+}
+.ratestar button{
+    border: none;
+    background-color: rgb(255, 0, 0);
+}
+.ratestar button:hover,.ratestar button:hover ~ button{
+    background-color: rgb(255, 255, 255);
+>>>>>>> f3d783c091eea06ab81e7c8683486219bd7e2451
 }
