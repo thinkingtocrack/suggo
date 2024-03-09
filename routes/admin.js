@@ -5,8 +5,7 @@ const products=require('../model/product')
 
 const multer = require('multer')
 const category = require('../controller/admin/category')
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+const upload = multer({ dest: 'public/uploads/' })
 const categorys=require('../model/category')
 const login=require('../controller/admin/login')
 const customer=require('../controller/admin/customer')
@@ -16,8 +15,7 @@ const dashboard=require('../controller/admin/dashboard')
 
 
 const seq=(req,res,next)=>{
-    // if(req.session.admin){
-    if(true){
+    if(req.session.admin){
         next()
     }else{
         res.redirect('/admin/admin_login')
@@ -45,11 +43,13 @@ router.get('/customer/deleteuser/:id',seq,customer.customer_delete)
 
 
 router.get('/product', seq,product.product_home )
-router.post('/product/new/:id', seq,upload.array('testImage', 12),product.product_new_post)
+router.post('/product/new/:id', seq,upload.array('testImage', 8),product.product_new_post)
+router.post('/product/newvarient/:id', seq,upload.array('testImage', 8),product.product_new_varient)
 router.get('/product/deleteproduct/:id',seq,product.product_delete)
 router.post('/product/status', seq, product.product_status)
 router.get('/product/edit/:id',seq,product.product_edit)
-router.post('/product/edit/:status/:id', seq, upload.array('testImage', 12),product.product_edit_post)
+router.post('/product/edit/varientedit/:id', seq,upload.array('testImage', 8),product.product_editvarient)
+router.post('/product/edit/:id', seq,product.product_edit_post)
 
 
 router.get('/category',seq,category.home)

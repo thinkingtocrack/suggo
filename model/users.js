@@ -8,7 +8,7 @@ const usersSchema=new Schema({
     email:{type:String},
     phone:{type:String},
     password:{type:String},
-    address:{type:Object},
+    address:{type:Array},
     cart: { type: Array },
     wishlist:{type: Array},
     status:{type:Boolean,default:true},

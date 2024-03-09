@@ -57,9 +57,49 @@ function productStatus(a,b){
 }
 
 
-function previewFiles() {
-    const preview = document.querySelector("#selectedImage");
-    const files = document.querySelector("#formFileMultiple").files;
+// function previewFiles() {
+//     const preview = document.querySelector("#selectedImage");
+//     const files = document.querySelector("#formFileMultiple1").files;
+//     preview.innerHTML=''
+//     function readAndPreview(file,i) {
+//     const reader = new FileReader();
+//     reader.addEventListener(
+//         "load",
+//         () => {
+//         const newSpan = document.createElement('span');
+//         newSpan.classList.add('imagespan');
+//         const newbutton=document.createElement('button')
+//         newbutton.classList.add('btn-close')
+//         newbutton.addEventListener('click',(e)=>{
+//             e.stopPropagation()
+//             fileremoval(i,'formFileMultiple')
+//             previewFiles()
+//         })
+//         const image = new Image()
+//         image.title = file.name;
+//         image.src = reader.result;
+//         newSpan.appendChild(image);
+//         newSpan.appendChild(newbutton)
+//         preview.appendChild(newSpan);
+//         },
+//         false,
+//     );
+
+//     reader.readAsDataURL(file);
+// }
+
+// if (files) {
+// Array.prototype.forEach.call(files, readAndPreview);
+// }
+// }
+
+// const picker = document.querySelector("#formFileMultiple1");
+// picker.addEventListener("change", previewFiles);
+
+
+function previewFiles(a,b) {
+    const preview = document.querySelector(a);
+    const files = document.querySelector(b).files;
     preview.innerHTML=''
     function readAndPreview(file,i) {
     const reader = new FileReader();
@@ -72,8 +112,8 @@ function previewFiles() {
         newbutton.classList.add('btn-close')
         newbutton.addEventListener('click',(e)=>{
             e.stopPropagation()
-            fileremoval(i,'formFileMultiple')
-            previewFiles()
+            fileremoval(i,b)
+            previewFiles(a,b)
         })
         const image = new Image()
         image.title = file.name;
@@ -93,26 +133,36 @@ Array.prototype.forEach.call(files, readAndPreview);
 }
 }
 
-const picker = document.querySelector("#formFileMultiple");
-picker.addEventListener("change", previewFiles);
+function pre(selid,fileid){
+    const picker = document.querySelector(fileid);
+    picker.addEventListener("change", ()=>{
+    previewFiles(selid,fileid)
+});
+}
+
+pre('#selectedImage',"#formFileMultiple1")
+pre('#selectedImage2',"#formFileMultiple2")
+pre('#selectedImage3',"#formFileMultiple3")
+
+
+
 
 
 async function productEdit(a){
+    document.querySelector('#editProductform').action=`/admin/product/edit/${a}`
     let b=await fetch(`http://localhost:4000/admin/product/edit/${a}`)
     b=await b.json()
     let editModal=document.querySelector('#editProduct')
     const myModal = new bootstrap.Modal(editModal, {backdrop:'static'})
     myModal.show()
-    document.querySelectorAll('.editproductbtnsub').forEach((a,i)=>{
-         a.formAction=`/admin/product/edit/${i}/`+b.data._id
-    })
     document.querySelectorAll('.x1').forEach((a)=>{
         let k=document.getElementById(a.value)
         k.disabled=true
-        if(a.value!='productfile'){
-            let label=document.querySelector(`label[for=${a.value}]`)
-            label.textContent=b.data[k.name]
-        }
+    })
+    const vbtn=document.querySelector('#editvarientbtn')
+    vbtn.addEventListener('click',(e)=>{
+        e.stopPropagation()
+        varientedit(b)
     })
     document.querySelectorAll('.x1').forEach((a)=>{
         a.addEventListener('change',(e)=>{
@@ -123,55 +173,50 @@ async function productEdit(a){
     })
 }
 
-
-
-
-
-
-
-
-
-function previewFiles2() {
-    const preview = document.querySelector("#selectedImage2");
-    const files = document.querySelector("#productfile").files;
-    preview.innerHTML=''
-    function readAndPreview(file,i) {
-    const reader = new FileReader();
-    reader.addEventListener(
-        "load",
-        () => {
-        const newSpan = document.createElement('span');
-        newSpan.classList.add('imagespan');
-        const newbutton=document.createElement('button')
-        newbutton.classList.add('btn-close')
-        newbutton.addEventListener('click',(e)=>{
+function turnon(){
+    let a=document.querySelectorAll('.y')
+    let yc=document.querySelectorAll('.yc')
+    a.forEach((el,i)=>{
+        el.addEventListener('change',(e)=>{
             e.stopPropagation()
-            fileremoval(i,'productfile')
-            previewFiles2()
+            yc[i].disabled=!e.target.checked
         })
-        const image = new Image()
-        image.title = file.name;
-        image.src = reader.result;
-        newSpan.appendChild(image);
-        newSpan.appendChild(newbutton)
-        preview.appendChild(newSpan);
-        },
-        false,
-    );
-
-    reader.readAsDataURL(file);
+    })
 }
 
-if (files) {
-Array.prototype.forEach.call(files, readAndPreview);
+
+function varientedit(b){
+    let editModal=document.querySelector('#varienteditmodal')
+    const myModal = new bootstrap.Modal(editModal, {backdrop:'static'})
+    myModal.show()
+    document.querySelector('#varientformx').action=`/admin/product/edit/varientedit/${b.data.productId}`
+    const varientbody=document.querySelector('.varientbody select')
+    b.data.varient.forEach((element)=>{
+        varientbody.innerHTML+=`<option value="${element.id}">${b.data.productname}-${element.color}</option>`
+    })
+    varientbody.addEventListener('change',(e)=>{
+        e.stopPropagation()
+        addacc(e.target.value,b.data)
+    })
+    addacc(b.data.varient[0].id,b.data)
+    turnon()
 }
+function addacc(id,d){
+    d.varient.forEach(e=>{
+        if(e.id==id){
+            const acc=document.querySelectorAll('.accordion-body')
+            acc[0].innerHTML=e.color
+            acc[1].innerHTML=e.price
+            acc[2].innerHTML=e.stock
+            acc[3].innerHTML=e.productdetails
+            let p=''
+            e.image.forEach(x=>{
+                p+=`<img style='height:200px;width:200px'  src="http://localhost:4000/uploads/${x}" alt="">`
+            })
+            acc[4].innerHTML=p
+        }
+    })
 }
-
-const picker2 = document.querySelector("#productfile");
-picker2.addEventListener("change", previewFiles2);
-
-
-
 
 
 
@@ -180,24 +225,36 @@ picker2.addEventListener("change", previewFiles2);
 
 
 function fileremoval(i,b){
-    // Get the file input element
-    let fileInput = document.getElementById(b);
-    // Get the selected files
+    let fileInput = document.querySelector(b);
     let selectedFiles = fileInput.files;
-
-    // Check if any file is selected
     if (selectedFiles.length > 0) {
-      // Remove the first selected file (you can adjust the index as needed)
-      let fileToRemove = selectedFiles[i];
-        
-      // Create a new array without the file to be removed
-      let updatedFiles = Array.from(selectedFiles).filter(file => file !== fileToRemove);
-    
-      let newFileList = new DataTransfer();
-        updatedFiles.forEach(file => newFileList.items.add(file));
-
-        // Update the file input with the new array of files
-        fileInput.files = newFileList.files;
+    let fileToRemove = selectedFiles[i];
+    let updatedFiles = Array.from(selectedFiles).filter(file => file !== fileToRemove);
+    let newFileList = new DataTransfer();
+    updatedFiles.forEach(file => newFileList.items.add(file));
+    fileInput.files = newFileList.files;
     }
      
+}
+
+function newVarient(a){
+    let form=document.querySelector("#varientform")
+    form.action=`/admin/product/newvarient/${a}`
+    let editModal=document.querySelector('#newVarient')
+    const myModal = new bootstrap.Modal(editModal, {backdrop:'static'})
+    myModal.show()
+}
+
+
+function minfile(id){
+    let file=document.getElementById(id)
+    if(file.disabled==true){
+        return true
+    }
+    if(file.files.length<3){
+        alert('add min 3 image')
+        return false
+    }else{
+        return true
+    }
 }

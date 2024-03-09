@@ -77,3 +77,9 @@ main{
 .imagespan img{
     height: 150px;
 }
+.varientoldbody{
+    flex:1
+}
+.varientbody{
+    flex: 1;
+}

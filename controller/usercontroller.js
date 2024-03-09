@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const otpFunction=require('../controller/otp/otpcontroller')
 const {validationResult}=require('../middleware/validation')
 const product = require('../model/product')
-
+const mongoose=require('mongoose')
 
 async function otpsend(a,otpx){
     const params = {
@@ -31,8 +31,10 @@ const user_signin = (req, res) => {
     
 }
 
-const user_account = (req, res) => {
+const user_account = async(req, res) => {
     try {
+        let address=await user.aggregate([{$match:{email:req.session.email}},{$unwind:'$address'},{$project:{address:1}}])
+        res.locals.address=address
         res.render('./user/userhome')
     } catch (error) {
         res.send(error)
@@ -158,18 +160,26 @@ const user_verify=async(req,res)=>{
 
 const user_wishlist=async(req,res)=>{
     try {
-        const wishlist=await user.find({email:req.session.email}).select('wishlist')
-        const productlist=await product.find({_id:{$in:wishlist[0].wishlist}}).select('productname img price _id')
+        const wishlist=await user.findOne({email:req.session.email}).select('wishlist')
+        let productid=[]
+        let varientid=[]
+        wishlist.wishlist.forEach(element=>{
+            productid.push(element.productid)
+            varientid.push(Number(element.varientid))
+        })
+        const productlist=await product.aggregate([{$match:{_id:{$in:productid.map(id => new mongoose.Types.ObjectId(id))}}},{$unwind:'$varient'},{$match:{'varient.id':{$in:varientid}}}])
         res.locals.wishlist=productlist
         res.render('./user/wishlist.ejs')
     } catch (error) {
+        console.log(error)
         res.send(error)
     }
 }
 const user_wishlistadd=async(req,res)=>{
     try {
         let productid=req.params.id
-        let b=await user.updateMany({email:req.session.email}, { $addToSet: { wishlist: productid } })
+        let varientid=req.params.v
+        let b=await user.updateMany({email:req.session.email}, { $addToSet: { wishlist: {productid:productid ,varientid:varientid}} })
         res.json({
             added:true,
             exists:(b.modifiedCount==0)?true:false,
@@ -183,7 +193,8 @@ const user_wishlistadd=async(req,res)=>{
 const user_wishlistremove=async(req,res)=>{
     try {
         let productid=req.params.id
-        let b=await user.updateOne({ email:req.session.email }, { $pull: { wishlist: productid } })
+        const varientid=req.params.v
+        let b=await user.updateOne({ email:req.session.email }, { $pull: { wishlist: {productid:productid,varientid:varientid}} })
         res.json({
             added:true,
             exists:(b.modifiedCount==0)?true:false,
@@ -200,8 +211,15 @@ const user_wishlistremove=async(req,res)=>{
 const user_cart=async(req,res)=>{
     try {
         const cartlist=await user.find({email:req.session.email}).select('cart')
-        const productlist=await product.find({_id:{$in:cartlist[0].cart}}).select('productname img price')
+        const varientidlist=[]
+        const cartlistid=cartlist[0].cart.map((a)=>{
+            varientidlist.push(Number(a.varientid))
+            return a.productid
+        })
+        const cartlistqty=cartlist[0].cart.map(a=>a.qty)
+        const productlist=await product.aggregate([{$match:{_id:{$in:cartlistid.map(id => new mongoose.Types.ObjectId(id))}}},{$unwind:'$varient'},{$match:{'varient.id':{$in:varientidlist}}}])
         res.locals.cartlist=productlist
+        res.locals.cartqtylist=cartlistqty
         res.render('./user/cart.ejs')
     } catch (error) {
         console.log(error)
@@ -211,12 +229,26 @@ const user_cart=async(req,res)=>{
 const user_cartadd=async(req,res)=>{
     try {
         let productid=req.params.id
-        let b=await user.updateMany({email:req.session.email}, { $addToSet: { cart: productid } })
+        let qty=req.params.qty
+        let varientid=req.params.v
+        let existingProduct = await user.updateMany(
+            {
+                email: req.session.email,
+                cart: { $elemMatch: { productid: productid ,varientid:varientid} }
+            },
+            {
+                $set: { "cart.$.qty": qty }
+            }
+        );
+        if(existingProduct.modifiedCount === 0){
+            var b=await user.updateMany({email:req.session.email}, { $addToSet: { cart: {productid:productid,qty:qty,varientid:varientid}} })
+        }
         res.json({
             added:true,
-            exists:(b.modifiedCount==0)?true:false,
+            exists:(b?.modifiedCount==0)?true:false,
         })
     } catch (error) {
+        console.log(error)
         res.json({
             added:false
         })
@@ -226,7 +258,8 @@ const user_cartadd=async(req,res)=>{
 const user_cartremove=async(req,res)=>{
     try {
         let productid=req.params.id
-        let b=await user.updateOne({ email:req.session.email }, { $pull: { cart: productid } })
+        let varientid=req.params.v
+        let b=await user.updateOne({ email:req.session.email }, { $pull: { cart: {productid:productid ,varientid:varientid}} })
         res.json({
             added:true,
             exists:(b.modifiedCount==0)?true:false,
@@ -238,6 +271,59 @@ const user_cartremove=async(req,res)=>{
     }
 }
 
+const user_rateproduct=async(req,res)=>{
+    const {id,v}=req.params
+    await product.updateMany(
+        {
+            productId:id,
+            varient: { $elemMatch: { id: Number(v)} }
+        },
+        {
+            $addToSet: { "varient.$.review": {rate:Number(req.query.rate),review:req.query.review,user:req.session.email} }
+        }
+    
+    )
+    res.redirect(`/shop/view/${id}/${v}`)
+}
 
 
-module.exports = {user_checkforgotpasswordPOST,user_forgotpasswordPOST,user_wishlistremove,user_cartremove,user_wishlist,user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }
+
+
+const user_addnewaddress=async (req,res)=>{
+    try {
+        let data={
+            fullname:`${req.body.firstname} ${req.body.lastname}`,
+            address:req.body.address,
+            city:req.body.city,
+            state:req.body.state,
+            zip:req.body.zip
+        }
+        await user.updateOne({email:req.session.email}, { $push: { address: data } })
+        res.redirect('/user/user_account')
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+const user_changepassword=async (req,res)=>{
+    try {
+        let data = req.body
+        let userx = await user.findOne({ email: req.session.email }) 
+        const check = await bcrypt.compare(data.old, userx.password)
+        if(check){
+            data.new =await bcrypt.hash(data.new,10)
+            userx.password=data.new
+            await userx.save()
+            res.locals.passwordchanged=true
+            res.redirect('/user/user_account')
+        }else{
+            res.locals.passworderror=true
+            res.redirect('/user/user_account')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+module.exports = {user_changepassword,user_addnewaddress,user_rateproduct,user_checkforgotpasswordPOST,user_forgotpasswordPOST,user_wishlistremove,user_cartremove,user_wishlist,user_cart,user_cartadd,user_wishlistadd, user_signin, user_account, user_registrationpost,user_registration,user_logout,user_forgotpassword,user_verify }

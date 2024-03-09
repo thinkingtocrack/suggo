@@ -1,6 +1,9 @@
 const products = require('../../model/product')
 const categorys = require('../../model/category')
 const category = require('../../model/category')
+const product = require('../../model/product')
+const crypto = require("crypto");
+
 
 
 
@@ -17,7 +20,7 @@ const product_home = async (req, res) => {
 
 const product_edit=async(req,res)=>{
     try {
-        const data = await products.findById(req.params.id).select('productname price category stock brand description')
+        const data = await products.findById(req.params.id).select('productname category brand description varient productId')
         res.json({
             data:data,
         })
@@ -49,48 +52,108 @@ const product_status=async (req, res) => {
 
 const product_new_post=async(req,res)=>{
     try {
-        let data = req.body
-        data.status = Boolean(Number(req.params.id))
-        let arrayimage = req.files.map((a) => {
-            return {
-                data: a.buffer.toString('base64'),
-                contentType: a.mimetype,
+        do{
+            var productId = crypto.randomInt(1000000,10000000);
+            var vid=crypto.randomInt(100,999);
+            let z=await product.find({productId:productId})
+            if(z.length==0){
+                break;
             }
+        }while(true)
+        let arrayimage = req.files.map((a) => {
+            return a.filename
         })
-        data.img = arrayimage
+        let data = {
+            varient:[{
+                id:vid,
+                price:req.body.price,
+                stock:req.body.stock,
+                image:arrayimage,
+                color:req.body.color,
+                productdetails:req.body.productdetails.split(','),
+                review:[]
+            }],
+            status:Boolean(Number(req.params.id)),
+            productname:req.body.productname,
+            productId:productId,
+            description:req.body.description,
+            brand:req.body.brand,
+            category:req.body.category,
+        }
         await products.create(data)
         res.redirect('/admin/product')
     } catch (error) {
+        console.log(error)
+        res.send(error)
+    }
+}
+
+const product_new_varient=async(req,res)=>{
+    try {
+        do{
+            var vid = crypto.randomInt(100,999);
+            let z=await product.find({productId:req.params.id,varient: {$elemMatch: {id: vid}}})
+            if(z.length==0){
+                break;
+            }
+        }while(true)
+        let arrayimage = req.files.map((a) => {
+            return a.filename
+        })
+        let data = {
+                id:vid,
+                price:req.body.price,
+                stock:req.body.stock,
+                image:arrayimage,
+                color:req.body.color,
+                productdetails:req.body.productdetails.split(','),
+                review:[]
+            }
+        await product.findByIdAndUpdate(req.params.id,{ $push: { varient: data } },{ new: true })
+        res.redirect('/admin/product')
+    } catch (error) {
+        console.log(error)
         res.send(error)
     }
 }
 
 const product_edit_post=async(req,res)=>{
     const product = await products.findById(req.params.id)
-    const status=Number(req.params.status)
     const data=req.body
-    let arrayimage = req.files.length==0 ? undefined: req.files.map((a) => {
-        return {
-            data: a.buffer.toString('base64'),
-            contentType: a.mimetype,
-        }
-    })
     try {
         await products.findByIdAndUpdate(req.params.id,
             {
                 productname: data?.productname == undefined ? product.productname : data.productname,
-                price: data?.price == undefined ? product.price : data.price,
                 category: data?.category == undefined ? product.category : data.category,
-                stock: data?.stock == undefined ? product.stock : data.stock,
                 brand: data?.brand == undefined ? product.brand : data.brand,
                 description: data?.description == undefined ? product.description : data.description,
-                status: Boolean(status),
-                img: arrayimage ==undefined ?product.img:arrayimage
             }, { new: true, runValidators: true }
         )
         res.redirect('/admin/product')
     } catch (error) {
         res.redirect('/admin/product')
+    }
+}
+
+const product_editvarient=async(req,res)=>{
+    try {
+        const {id}=req.params
+        const {vid,color,price,stock,productdetails}=req.body
+        let arrayimage = req.files.map((a) => {
+            return a.filename
+        })
+        console.log(arrayimage)
+        const updateObject = {
+            ...(color !== undefined && { "varient.$.color": color }),
+            ...(price !== undefined && { "varient.$.price": price }),
+            ...(stock !== undefined && { "varient.$.stock": stock }),
+            ...(productdetails !== undefined && { "varient.$.productdetails": productdetails.split(',') }),
+            ...(arrayimage.length!==0 && {'varient.$.image':arrayimage}),
+        };
+        await products.findOneAndUpdate({productId:id,'varient.id':Number(vid)},{$set:updateObject},{ new: true })
+        res.redirect('/admin/product')
+    } catch (error) {
+        
     }
 }
 
@@ -109,4 +172,4 @@ const product_delete=async(req,res)=>{
     }
 }
 
-module.exports = { product_home ,product_edit,product_status,product_new_post,product_edit_post,product_delete}
+module.exports = { product_editvarient,product_new_varient,product_home ,product_edit,product_status,product_new_post,product_edit_post,product_delete}
